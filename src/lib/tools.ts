@@ -24,4 +24,11 @@ export const tools: Tool[] = [
 			'Figure out what tent size you need based on guest count and seating style — seated dinner, cocktail reception, theater, or conference setup.',
 		teaser: 'Guest count to tent size, instantly',
 	},
+	{
+		slug: 'seating-chart-planner',
+		name: 'Wedding & Event Seating Chart Planner',
+		description:
+			'Build a seating chart by adding guests and tables, then assigning who sits where — with capacity limits, autosave, and a printable export.',
+		teaser: 'Drag, drop, done — no spreadsheet',
+	},
 ];

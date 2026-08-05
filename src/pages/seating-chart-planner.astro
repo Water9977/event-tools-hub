@@ -1,0 +1,381 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+	{
+		q: 'Round or rectangular tables — which is better for a wedding?',
+		a: 'Round tables (typically seating 8-10) are generally better for conversation, since everyone can see and hear everyone else at the table — this is why they\'re the default for wedding receptions. Rectangular or long banquet-style tables fit more guests in a given room length and create a more dramatic, family-style look, but guests at the far ends can\'t easily talk to each other. Many receptions mix both: rectangular for a head table, round for guest tables.',
+	},
+	{
+		q: 'Where should the head table or sweetheart table go?',
+		a: 'Facing the room, usually with its back to a wall, window, or focal point (not facing a kitchen door or bathroom hallway) so it naturally draws the room\'s attention. A sweetheart table (just the couple) works well when the wedding party would otherwise make the head table very long; a full head table with the wedding party is more traditional.',
+	},
+	{
+		q: 'How do I seat divorced parents or family conflicts?',
+		a: 'Give them separate tables rather than forcing proximity, and if possible put a physical buffer (another table, a walkway) between them rather than seating them back-to-back. This is one of the most common real seating-chart problems, and there\'s no universally "correct" answer — prioritize the couple\'s actual relationships with each parent over a rigid protocol.',
+	},
+	{
+		q: 'Should I do a "singles table"?',
+		a: 'Most modern etiquette guidance recommends against a dedicated singles table — it can feel isolating for the people seated there. Better to mix single guests across tables based on shared interests, age range, or how they know the couple (college friends, coworkers), the same logic used for any other table.',
+	},
+	{
+		q: 'Where should kids sit?',
+		a: 'Families with young children are often seated together at a table near an exit (for an easy, low-disruption exit if needed) and away from the speaker system. Older kids and teens sometimes do better at their own table together rather than split among adult tables — use your judgment on the specific kids involved.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	title="Seating Chart Planner — Free Wedding & Event Table Planner | Event Tools"
+	description="Free seating chart planner. Add guests and tables, then assign who sits where — with capacity limits, autosave, and a printable export. No signup."
+>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<div class="max-w-4xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2 text-text">Seating Chart Planner</h1>
+		<p class="text-text-muted mb-8">
+			Add your guests and tables below, then click a guest and click a table to seat them
+			(or drag and drop on desktop). Your chart saves automatically in this browser.
+		</p>
+
+		<div class="grid sm:grid-cols-2 gap-4 mb-6">
+			<div class="card p-5">
+				<h2 class="text-sm font-semibold mb-3 text-text">Add a guest</h2>
+				<form id="guest-form" class="flex flex-col gap-2">
+					<input
+						id="guest-input"
+						type="text"
+						placeholder="Guest name, or comma-separated for several"
+						class="field w-full px-3 py-2 text-sm"
+					/>
+					<button type="submit" class="btn-secondary text-sm py-2">Add guest(s)</button>
+				</form>
+			</div>
+			<div class="card p-5">
+				<h2 class="text-sm font-semibold mb-3 text-text">Add a table</h2>
+				<form id="table-form" class="flex flex-col gap-2">
+					<input id="table-name-input" type="text" placeholder="Table name (e.g. Table 1)" class="field w-full px-3 py-2 text-sm" />
+					<div class="flex gap-2">
+						<input id="table-capacity-input" type="number" min="1" max="30" value="8" class="field w-24 px-3 py-2 text-sm" />
+						<select id="table-shape-input" class="field flex-1 px-3 py-2 text-sm">
+							<option value="round">Round</option>
+							<option value="rectangular">Rectangular</option>
+						</select>
+					</div>
+					<button type="submit" class="btn-secondary text-sm py-2">Add table</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="card p-5 mb-6">
+			<div class="flex items-center justify-between mb-3">
+				<h2 class="text-sm font-semibold text-text">Unassigned guests (<span id="unassigned-count">0</span>)</h2>
+				<button id="export-btn" type="button" class="btn-secondary text-xs py-1.5 px-3">Export chart (.txt)</button>
+			</div>
+			<div id="guest-pool" class="flex flex-wrap gap-2 min-h-[2.5rem]"></div>
+			<p class="text-xs text-text-muted mt-2">Click a guest, then click a table to seat them. Click a seated guest to unseat them.</p>
+		</div>
+
+		<div id="tables-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"></div>
+
+		<article class="prose max-w-none prose-headings:text-text prose-p:text-text prose-a:text-primary prose-strong:text-text">
+			<p>
+				A seating chart is the last big logistics puzzle before an event, and it's the one that
+				resists a spreadsheet the least gracefully — you're not just listing names, you're
+				balancing table capacity, family dynamics, and who actually wants to sit near whom, all
+				at once and all interdependent. This tool handles the bookkeeping (capacity limits, who's
+				still unassigned) so you can focus on the actual decisions.
+			</p>
+
+			<h2>Round vs. rectangular tables</h2>
+			<p>
+				Round tables (usually 8-10 seats) are the standard choice for wedding receptions because
+				every seat has a clear sightline and conversation range to every other seat at the table.
+				Rectangular or banquet tables fit more people in a given amount of floor space and read as
+				more dramatic and family-style, but guests at opposite ends effectively can't talk to each
+				other — better suited to a head table or a rehearsal-dinner-style long table than for
+				guest tables where mixing and conversation matter.
+			</p>
+
+			<h2>Where to put the head table or sweetheart table</h2>
+			<p>
+				Position it facing the room, ideally against a wall, window, or other visual focal point —
+				never facing a service door, kitchen entrance, or restroom hallway. A sweetheart table
+				(just the couple, no wedding party) is increasingly common and avoids the awkwardness of
+				an odd-numbered wedding party or partners of the wedding party being seated separately. A
+				full head table is more traditional and keeps the whole wedding party together and visible.
+			</p>
+
+			<h2>Handling family seating conflicts</h2>
+			<p>
+				Divorced parents, estranged relatives, and old family tension are the most common real
+				seating-chart problem, and there's no universal fix — the right call depends on the actual
+				relationships involved, not a rule. General guidance: separate tables rather than forced
+				proximity, a physical buffer (another table or a walkway) between them if the room allows
+				it, and prioritize what will make the couple's day easiest over any protocol about who
+				"should" sit where.
+			</p>
+
+			<h2>Mixing guests instead of a singles table</h2>
+			<p>
+				A dedicated "singles table" has fallen out of favor in most modern etiquette guidance — it
+				can read as isolating rather than thoughtful. Group single guests by a real shared
+				connection instead: college friends, coworkers, a shared hobby, similar age range — the
+				same logic you'd use for any other table, rather than treating relationship status as the
+				organizing factor.
+			</p>
+
+			<h2>Seating children and families</h2>
+			<p>
+				Families with young kids often do best near an exit, so a bathroom trip or an early,
+				low-disruption departure doesn't mean crossing the whole room, and away from the speaker
+				system. Older kids and teens sometimes prefer their own table together rather than being
+				split among adult tables — this depends heavily on the specific kids and how well they
+				know each other.
+			</p>
+
+			<h2>How to use this planner</h2>
+			<p>
+				Add every guest first (the bulk comma-separated input is faster than one at a time for a
+				long list), then add your tables with real capacities. Click a guest chip to select them,
+				then click the table you want to seat them at — the tool won't let you overfill a table.
+				On desktop, you can also drag a guest chip directly onto a table. Everything saves
+				automatically as you go, and the export button gives you a plain-text summary you can hand
+				to a caterer or venue coordinator.
+			</p>
+
+			<h2>Frequently asked questions</h2>
+			{faqs.map((f) => (
+				<div class="mb-4">
+					<h3 class="text-lg font-semibold">{f.q}</h3>
+					<p>{f.a}</p>
+				</div>
+			))}
+		</article>
+	</div>
+</Layout>
+
+<script>
+	interface TableT {
+		id: string;
+		name: string;
+		capacity: number;
+		shape: 'round' | 'rectangular';
+	}
+
+	const STORAGE_KEY = 'seating-chart-planner-v1';
+
+	let guests: string[] = [];
+	let tables: TableT[] = [];
+	let assignments: Record<string, string | null> = {};
+	let selectedGuest: string | null = null;
+
+	const guestForm = document.getElementById('guest-form') as HTMLFormElement;
+	const guestInput = document.getElementById('guest-input') as HTMLInputElement;
+	const tableForm = document.getElementById('table-form') as HTMLFormElement;
+	const tableNameInput = document.getElementById('table-name-input') as HTMLInputElement;
+	const tableCapacityInput = document.getElementById('table-capacity-input') as HTMLInputElement;
+	const tableShapeInput = document.getElementById('table-shape-input') as HTMLSelectElement;
+	const guestPoolEl = document.getElementById('guest-pool') as HTMLDivElement;
+	const unassignedCountEl = document.getElementById('unassigned-count') as HTMLSpanElement;
+	const tablesGridEl = document.getElementById('tables-grid') as HTMLDivElement;
+	const exportBtn = document.getElementById('export-btn') as HTMLButtonElement;
+
+	function uid(): string {
+		return Math.random().toString(36).slice(2, 9);
+	}
+
+	function seatedCount(tableId: string): number {
+		return Object.values(assignments).filter((t) => t === tableId).length;
+	}
+
+	function guestChip(name: string, context: 'pool' | 'table'): HTMLElement {
+		const chip = document.createElement('button');
+		chip.type = 'button';
+		chip.textContent = name;
+		chip.className =
+			'text-xs px-2.5 py-1 rounded-full border transition-none cursor-pointer ' +
+			(selectedGuest === name
+				? 'bg-primary text-white border-primary'
+				: 'bg-surface text-text border-border hover:border-primary');
+		chip.addEventListener('click', () => {
+			if (context === 'table') {
+				// clicking a seated guest unseats them
+				assignments[name] = null;
+				selectedGuest = null;
+				save();
+				render();
+				return;
+			}
+			selectedGuest = selectedGuest === name ? null : name;
+			render();
+		});
+		chip.draggable = true;
+		chip.addEventListener('dragstart', (e) => {
+			e.dataTransfer?.setData('text/plain', name);
+		});
+		return chip;
+	}
+
+	function render() {
+		// Guest pool = unassigned guests
+		guestPoolEl.innerHTML = '';
+		const unassigned = guests.filter((g) => !assignments[g]);
+		unassignedCountEl.textContent = String(unassigned.length);
+		if (unassigned.length === 0 && guests.length > 0) {
+			const done = document.createElement('p');
+			done.className = 'text-xs text-text-muted';
+			done.textContent = 'Everyone is seated.';
+			guestPoolEl.appendChild(done);
+		}
+		unassigned.forEach((g) => guestPoolEl.appendChild(guestChip(g, 'pool')));
+
+		// Tables
+		tablesGridEl.innerHTML = '';
+		tables.forEach((table) => {
+			const seated = guests.filter((g) => assignments[g] === table.id);
+			const card = document.createElement('div');
+			card.className = 'card p-4';
+			card.dataset.tableId = table.id;
+
+			const header = document.createElement('div');
+			header.className = 'flex items-center justify-between mb-2';
+			header.innerHTML = `
+				<div>
+					<h3 class="font-semibold text-sm text-text">${table.name}</h3>
+					<p class="text-xs text-text-muted">${table.shape === 'round' ? 'Round' : 'Rectangular'} · ${seated.length}/${table.capacity} seats</p>
+				</div>
+			`;
+			const removeBtn = document.createElement('button');
+			removeBtn.type = 'button';
+			removeBtn.textContent = 'Remove';
+			removeBtn.className = 'text-xs text-text-muted hover:text-primary';
+			removeBtn.addEventListener('click', () => {
+				guests.forEach((g) => {
+					if (assignments[g] === table.id) assignments[g] = null;
+				});
+				tables = tables.filter((t) => t.id !== table.id);
+				save();
+				render();
+			});
+			header.appendChild(removeBtn);
+			card.appendChild(header);
+
+			const chipRow = document.createElement('div');
+			chipRow.className = 'flex flex-wrap gap-1.5 min-h-[2rem]';
+			seated.forEach((g) => chipRow.appendChild(guestChip(g, 'table')));
+			card.appendChild(chipRow);
+
+			// Click-to-assign target
+			card.addEventListener('click', (e) => {
+				if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+				if (!selectedGuest) return;
+				if (seated.length >= table.capacity) return;
+				assignments[selectedGuest] = table.id;
+				selectedGuest = null;
+				save();
+				render();
+			});
+
+			// Drag-and-drop target
+			card.addEventListener('dragover', (e) => {
+				e.preventDefault();
+			});
+			card.addEventListener('drop', (e) => {
+				e.preventDefault();
+				const name = e.dataTransfer?.getData('text/plain');
+				if (!name || !guests.includes(name)) return;
+				if (seatedCount(table.id) >= table.capacity) return;
+				assignments[name] = table.id;
+				save();
+				render();
+			});
+
+			tablesGridEl.appendChild(card);
+		});
+
+		if (tables.length === 0) {
+			const empty = document.createElement('p');
+			empty.className = 'text-sm text-text-muted col-span-full';
+			empty.textContent = 'Add a table above to start seating guests.';
+			tablesGridEl.appendChild(empty);
+		}
+	}
+
+	guestForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const raw = guestInput.value.trim();
+		if (!raw) return;
+		const names = raw
+			.split(',')
+			.map((n) => n.trim())
+			.filter((n) => n.length > 0 && !guests.includes(n));
+		guests.push(...names);
+		guestInput.value = '';
+		save();
+		render();
+	});
+
+	tableForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const name = tableNameInput.value.trim() || `Table ${tables.length + 1}`;
+		const capacity = Math.max(1, Number(tableCapacityInput.value) || 8);
+		const shape = tableShapeInput.value as 'round' | 'rectangular';
+		tables.push({ id: uid(), name, capacity, shape });
+		tableNameInput.value = '';
+		save();
+		render();
+	});
+
+	exportBtn.addEventListener('click', () => {
+		const lines: string[] = ['Seating Chart', ''];
+		tables.forEach((table) => {
+			const seated = guests.filter((g) => assignments[g] === table.id);
+			lines.push(`${table.name} (${table.shape}, ${seated.length}/${table.capacity}):`);
+			seated.forEach((g) => lines.push(`  - ${g}`));
+			lines.push('');
+		});
+		const unassigned = guests.filter((g) => !assignments[g]);
+		if (unassigned.length) {
+			lines.push('Unassigned:');
+			unassigned.forEach((g) => lines.push(`  - ${g}`));
+		}
+		const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'seating-chart.txt';
+		a.click();
+		URL.revokeObjectURL(url);
+	});
+
+	function save() {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify({ guests, tables, assignments }));
+	}
+
+	function load() {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (!raw) return;
+		try {
+			const data = JSON.parse(raw);
+			guests = Array.isArray(data.guests) ? data.guests : [];
+			tables = Array.isArray(data.tables) ? data.tables : [];
+			assignments = typeof data.assignments === 'object' && data.assignments ? data.assignments : {};
+		} catch {
+			// ignore malformed saved state, defaults already empty
+		}
+	}
+
+	load();
+	render();
+</script>
