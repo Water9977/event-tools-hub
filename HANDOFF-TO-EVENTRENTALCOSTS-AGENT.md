@@ -51,16 +51,18 @@ snippet text will be provided for you to drop into `Header.astro`,
 **Not deployed anywhere yet.** Everything so far is local, unpublished,
 no domain purchased, no Cloudflare Pages project created.
 
-**Still an open decision** (flagged in this project's own `TODO.md`,
-not silently resolved): subdomain of your domain
-(`tools.eventrentalcosts.com`, zero extra cost, some inherited authority)
-vs. a fully separate new domain (~$10-12/yr, cleaner brand independence).
-Currently *defaulting* to subdomain based on keyword research (the tent
-calculator's real SEO value comes from linking into your higher-volume
-"tent rental cost" keyword cluster, not standing alone), but this hasn't
-been explicitly confirmed by the user yet. If you're asked to help with
-DNS/Cloudflare setup for a `tools.` subdomain pointing at a separate
-Cloudflare Pages project, that's this decision resolving to "subdomain."
+**Decided and confirmed by the user**: `tools.eventrentalcosts.com`, a
+subdomain of your domain — not a new standalone domain. Chosen because
+the tent calculator's real SEO value comes from linking into your
+higher-volume "tent rental cost" keyword cluster, not standing alone.
+
+**This means you may be asked to help with**: adding a `tools` CNAME/
+subdomain record in Cloudflare DNS for eventrentalcosts.com's zone,
+pointed at a separate, new Cloudflare Pages project (this project's own
+deploy — not a route inside your existing Pages project, see "Why this
+exists as a separate project" above). That DNS change touches your
+zone specifically, which is why it's called out here rather than handled
+silently from the other workspace.
 
 Either way: **separate Cloudflare Pages project**, separate deploy, own
 build pipeline. Not a route inside your existing Pages project.

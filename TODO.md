@@ -1,7 +1,17 @@
 # TODO
 
-## Decisions needed
-- [ ] Subdomain (`tools.eventrentalcosts.com`) vs new standalone domain — defaulting to **subdomain** per round-2 keyword research (tent-size tool's real value is compounding the existing higher-volume "tent rental cost" cluster, not standing alone). Proceeding on this default; say so if you want the new-domain path instead — cheaply reversible at this stage, nothing built yet locks it in.
+## Decisions made
+- [x] **Subdomain confirmed**: `tools.eventrentalcosts.com`. User explicitly confirmed (2026-08-05), no longer a default. `astro.config.mjs` `site` value already set to this from session 2, no code change needed.
+
+## Deployment checklist (next actionable step, per this project's own launch-monetize research)
+- [ ] Cloudflare Pages project: create new project for this repo (separate from the sibling site's own Pages project — this is a distinct deploy per the integration decision, not a route inside theirs)
+- [ ] `tools` CNAME/subdomain added in Cloudflare DNS for eventrentalcosts.com's zone, pointed at this new Pages project — this touches the sibling site's DNS zone, so needs to happen either by the user directly or the eventrentalcosts.com agent, not from this project's workspace
+- [ ] Custom domain attached in the new Pages project's settings for `tools.eventrentalcosts.com` (triggers cert provisioning)
+- [ ] `_headers` noindex rule for the `*.pages.dev` preview domain — can only be written correctly once the real `.pages.dev` project name exists (was blocked on this since session 2)
+- [ ] Check Cloudflare's "Managed robots.txt" (AI Crawl Control) toggle on the new zone/project — flagged in session 4 as override risk, verify once real
+- [ ] Google Analytics
+- [ ] Google Search Console + Bing Webmaster Tools submission
+- [ ] Once live: hand the eventrentalcosts.com agent the real cross-link snippets (tent calculator ↔ `/tent-rental-cost/`) — this is the actual "integration" step per `HANDOFF-TO-EVENTRENTALCOSTS-AGENT.md`
 
 ## Build order (locked in research/00-MASTER-SHORTLIST.md)
 - [x] 1. Party/Event Budget Planner — flagship. Built and verified live (real browser test, not just build success): 4 event-type presets, live editable categories, over/under-budget indicator, localStorage persistence confirmed across reload, dark mode confirmed bidirectional, mobile viewport confirmed no horizontal overflow, all nav routes confirmed 200, unknown routes confirmed 404. Wedding preset percentages sourced from The Knot's real-couples survey data (cited in-page); other 3 presets are labeled as general heuristics, not fabricated data.
