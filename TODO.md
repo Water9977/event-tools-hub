@@ -3,15 +3,21 @@
 ## Decisions made
 - [x] **Subdomain confirmed**: `tools.eventrentalcosts.com`. User explicitly confirmed (2026-08-05), no longer a default. `astro.config.mjs` `site` value already set to this from session 2, no code change needed.
 
-## Deployment checklist (next actionable step, per this project's own launch-monetize research)
-- [ ] Cloudflare Pages project: create new project for this repo (separate from the sibling site's own Pages project — this is a distinct deploy per the integration decision, not a route inside theirs)
-- [ ] `tools` CNAME/subdomain added in Cloudflare DNS for eventrentalcosts.com's zone, pointed at this new Pages project — this touches the sibling site's DNS zone, so needs to happen either by the user directly or the eventrentalcosts.com agent, not from this project's workspace
-- [ ] Custom domain attached in the new Pages project's settings for `tools.eventrentalcosts.com` (triggers cert provisioning)
-- [ ] `_headers` noindex rule for the `*.pages.dev` preview domain — can only be written correctly once the real `.pages.dev` project name exists (was blocked on this since session 2)
-- [ ] Check Cloudflare's "Managed robots.txt" (AI Crawl Control) toggle on the new zone/project — flagged in session 4 as override risk, verify once real
+## LIVE: https://tools.eventrentalcosts.com/ (deployed 2026-08-05, session 6)
+
+**Not a "Cloudflare Pages project"** — correcting earlier language in this file. `@astrojs/cloudflare` sets this project up as a **Workers + Static Assets** deployment (the modern Pages successor — has `main`/`assets` in `wrangler.jsonc`, not a `pages_build_output_dir`). Deploy command is `wrangler deploy`, not `wrangler pages deploy`. Functionally equivalent to what was planned, different underlying product — matters if referencing Cloudflare dashboard sections later (it's under **Workers & Pages → Overview**, not a separate "Pages" list).
+
+## Deployment checklist — done, verified live
+- [x] Deployed via `wrangler deploy` (OAuth login confirmed same Cloudflare account that owns eventrentalcosts.com's zone — user explicitly confirmed before anything was created)
+- [x] Custom domain `tools.eventrentalcosts.com` attached — **not** via the `wrangler.jsonc` `routes`/`custom_domain` config (tried it, real finding: `@astrojs/cloudflare` regenerates its own `wrangler.json` at build time and silently drops custom top-level fields like `routes` — confirmed by inspecting the actual deployed config, not guessed). Attached instead via a direct `PUT /accounts/{id}/workers/domains` API call using the wrangler-obtained OAuth token. DNS record and SSL cert were auto-created by that call — no manual DNS step was needed.
+- [x] DNS confirmed live (real Cloudflare IPs via 1.1.1.1 and 8.8.8.8), HTTPS confirmed working (valid cert, 200 response) — local machine's DNS resolver briefly showed a stale negative cache right after creation, resolved itself within ~30s. Not a server-side issue.
+- [x] All 13 real routes + fake-route-404 re-verified on the actual production domain (not just workers.dev) via `curl`.
+- [x] `_headers` noindex rule for the workers.dev preview domain — added (`public/_headers`), confirmed it merges correctly with the adapter's own auto-injected cache-control rule in the build output. Turned out to be moot in a good way: once a custom domain is attached, Cloudflare auto-disables the `workers.dev` route by default (confirmed live: it now 404s, not just noindexed) — the noindex rule stays in as harmless defense-in-depth in case `workers_dev` ever gets re-enabled.
+- [x] Cloudflare's "Managed robots.txt" (AI Crawl Control) risk — checked directly by curling the live `/robots.txt`, byte-for-byte matches what's in the repo, no override happening. Resolved, not just flagged.
+- [x] Confirmed (harmless, not a bug): every build auto-injects unused `SESSION` (KV) and `IMAGES` bindings — this is `@astrojs/cloudflare`'s own unconditional default, not something this project's code added or calls. Zero cost since nothing in the code ever references them. Not worth fighting the adapter's defaults over; documented so it isn't mistaken for a mistake later.
 - [ ] Google Analytics
 - [ ] Google Search Console + Bing Webmaster Tools submission
-- [ ] Once live: hand the eventrentalcosts.com agent the real cross-link snippets (tent calculator ↔ `/tent-rental-cost/`) — this is the actual "integration" step per `HANDOFF-TO-EVENTRENTALCOSTS-AGENT.md`
+- [ ] Hand the eventrentalcosts.com agent the real cross-link snippets (tent calculator ↔ `/tent-rental-cost/`) now that there's a real live URL — this is the actual "integration" step per `HANDOFF-TO-EVENTRENTALCOSTS-AGENT.md`, not yet done
 
 ## Build order (locked in research/00-MASTER-SHORTLIST.md)
 - [x] 1. Party/Event Budget Planner — flagship. Built and verified live (real browser test, not just build success): 4 event-type presets, live editable categories, over/under-budget indicator, localStorage persistence confirmed across reload, dark mode confirmed bidirectional, mobile viewport confirmed no horizontal overflow, all nav routes confirmed 200, unknown routes confirmed 404. Wedding preset percentages sourced from The Knot's real-couples survey data (cited in-page); other 3 presets are labeled as general heuristics, not fabricated data.

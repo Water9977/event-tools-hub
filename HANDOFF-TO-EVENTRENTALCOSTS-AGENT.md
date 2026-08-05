@@ -46,23 +46,44 @@ overlap, nothing fragile. When each tool goes live, exact copy-paste
 snippet text will be provided for you to drop into `Header.astro`,
 `Footer.astro`, or specific content pages — not files to merge.
 
-## Deployment plan — where does this actually end up
+## Deployment — LIVE
 
-**Not deployed anywhere yet.** Everything so far is local, unpublished,
-no domain purchased, no Cloudflare Pages project created.
+**https://tools.eventrentalcosts.com/** — deployed 2026-08-05, confirmed
+live (DNS, SSL cert, all routes, robots.txt all directly verified, not
+assumed). `tools.eventrentalcosts.com`, a subdomain of your domain, not a
+new standalone domain — confirmed by the user.
 
-**Decided and confirmed by the user**: `tools.eventrentalcosts.com`, a
-subdomain of your domain — not a new standalone domain. Chosen because
-the tent calculator's real SEO value comes from linking into your
-higher-volume "tent rental cost" keyword cluster, not standing alone.
+**Correction on product type**: this is **not** a classic "Cloudflare
+Pages project" — `@astrojs/cloudflare` sets it up as a **Workers +
+Static Assets** deployment (the modern Pages successor). In the
+Cloudflare dashboard it lives under **Workers & Pages → Overview**, not
+a separate Pages list — same place, different underlying product. This
+matters if you're ever looking for it in the dashboard or comparing
+notes on deploy behavior between this project and yours.
 
-**This means you may be asked to help with**: adding a `tools` CNAME/
-subdomain record in Cloudflare DNS for eventrentalcosts.com's zone,
-pointed at a separate, new Cloudflare Pages project (this project's own
-deploy — not a route inside your existing Pages project, see "Why this
-exists as a separate project" above). That DNS change touches your
-zone specifically, which is why it's called out here rather than handled
-silently from the other workspace.
+**No DNS action needed from you.** The custom domain was attached via a
+direct Cloudflare API call (`PUT /accounts/{id}/workers/domains`), which
+auto-created the DNS record and SSL cert in eventrentalcosts.com's zone
+on its own — nobody needed to touch the DNS dashboard manually. If you
+ever look at that zone's DNS records, you'll see a new record for
+`tools` that this process created; that's expected, not something to
+remove.
+
+**Real gap worth knowing if you ever add a custom domain to a Workers+
+static-assets project yourself**: the `wrangler.jsonc` `routes`/
+`custom_domain` config-file method (Cloudflare's own documented approach)
+did **not** work here — `@astrojs/cloudflare` regenerates its own
+`wrangler.json` at build time from a fixed set of known fields and
+silently drops custom top-level keys like `routes`. Confirmed by
+inspecting the actual deployed config, not assumed. If your own project
+ever needs a custom domain added to a Workers deploy, check whether your
+adapter/build step does something similar before trusting the config-file
+method blindly — the direct API call is the reliable fallback.
+
+**Now that it's live**: the cross-link snippets mentioned throughout this
+doc (tent calculator ↔ your `/tent-rental-cost/` guide) can actually be
+built and handed to you. That hasn't happened yet as of this doc's last
+edit — check `TODO.md`'s deployment checklist for current status.
 
 Either way: **separate Cloudflare Pages project**, separate deploy, own
 build pipeline. Not a route inside your existing Pages project.

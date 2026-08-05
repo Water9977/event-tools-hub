@@ -8,6 +8,9 @@
 		"directory": "./dist",
 		"binding": "ASSETS"
 	},
+	"routes": [
+		{ "pattern": "tools.eventrentalcosts.com", "custom_domain": true }
+	],
 	"observability": {
 		"enabled": true
 	}
