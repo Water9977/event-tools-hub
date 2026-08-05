@@ -5,7 +5,7 @@
 
 ## Build order (locked in research/00-MASTER-SHORTLIST.md)
 - [x] 1. Party/Event Budget Planner — flagship. Built and verified live (real browser test, not just build success): 4 event-type presets, live editable categories, over/under-budget indicator, localStorage persistence confirmed across reload, dark mode confirmed bidirectional, mobile viewport confirmed no horizontal overflow, all nav routes confirmed 200, unknown routes confirmed 404. Wedding preset percentages sourced from The Knot's real-couples survey data (cited in-page); other 3 presets are labeled as general heuristics, not fabricated data.
-- [ ] 2. Tent Size Calculator — companion page, links into existing eventrentalcosts.com cost-cluster. AI-Overview-replaced on its own head term, built for internal linking/topical depth, not standalone traffic
+- [x] 2. Tent Size Calculator — built and verified live. Guest count + seating style + extras (buffet/bar/DJ/dance floor) → sq ft needed → nearest standard tent size + next-size-up suggestion. Direct link to eventrentalcosts.com's `/tent-rental-cost/` guide (its actual SEO job per the locked plan, since it's AI-Overview-replaced on its own head term). Full dedicated SEO treatment applied per the user's `seo-s` skill — see "SEO methodology applied" section below.
 - [ ] 3. Wedding/Event Seating Chart Planner — structurally AIO-immune (drag-and-drop, stateful, exportable). Higher build complexity, worth it given how the simpler formula tools died
 - [ ] 4. Binary/Hex/Base64/URL Toolkit — fast, cheap, structurally resistant (needs real user-supplied text), diversifies hub outside the event-only failure mode
 
@@ -27,7 +27,28 @@ For each tool above:
 - [ ] `_headers` noindex rule for the `*.pages.dev` preview domain — can't be written correctly until the real Cloudflare Pages project name/URL exists post-first-deploy
 - [ ] Google Analytics
 - [ ] Google Search Console + Bing Webmaster Tools submission on launch day
-- [ ] Homepage — still the Astro scaffold placeholder, needs real tool-listing content once more tools exist (was going to wire it after tool #1, doing it next)
+- [x] Homepage — real tool-listing grid, reads from `src/lib/tools.ts` (single source of truth, also feeds `llms.txt`)
+- [x] `og:image`/`twitter:image` — was completely missing from `Layout.astro` until the `seo-s` skill audit caught it. Generated via Playwright (`scripts/og-image.mjs`, same approach as eventrentalcosts.com's own script), 1200x630, no stats baked in (learned from the sibling project's own postmortem — a stats-bearing OG image silently goes stale).
+- [x] `llms.txt` — build-time generated (`src/pages/llms.txt.ts`), not a static file, for the same reason the sibling project switched: a static file drifts every time a tool gets added. Reads from the same `tools.ts` list as the homepage.
+
+## SEO methodology applied (user's `seo-s` skill, adapted from Next.js/Vercel to Astro/Cloudflare)
+
+The skill is written for Next.js App Router + Vercel. Most of its bug classes don't exist in this stack — worth stating explicitly rather than silently skipping:
+- **Canonical tag bugs (the skill's #1 issue)**: don't apply here at all. The Next.js bug is specifically that client components can't export `metadata` and silently inherit the root layout's canonical. Astro has no client/server component split for page metadata — every `.astro` page computes its own canonical via `Layout.astro`'s shared `new URL(Astro.url.pathname, Astro.site)`, always self-referencing, always present. Verified live on the new tool page anyway rather than assuming: confirmed self-referencing.
+- **Title template stacking**: doesn't apply — titles here are hand-written full strings per page (not a `template: '%s | Brand'` pattern), so no double-brand-name risk.
+- **Caching/Cache-Control concerns**: mostly don't apply — this is a 100% static site, no per-request auth/cookie reads that would kill CDN caching the way the skill describes for Next.js Server Components.
+
+What DID apply and got fixed:
+- **`og:image` was completely missing** from `Layout.astro` — real gap the skill's audit caught, not previously noticed. Fixed site-wide (see Site-wide section above).
+- **Meta description length**: both Budget Planner (205 chars) and Tent Size Calculator's first draft (178 chars) were over the skill's 150-160 truncation-risk target. Trimmed both to ~148 chars, verified via `wc -c` against the live rendered output, not just the source string.
+- **`llms.txt`**: net-new per the skill's own "zero risk, add it" priority — built-time-generated rather than static, see above.
+- **robots.txt**: already matched the skill's AI-crawler-allowlist recommendation from session 2, before this skill was read — no change needed, but re-verified live.
+- **Sitemap**: `@astrojs/sitemap` auto-discovers from actual build output (unlike Next's `next-sitemap`, which the skill warns can silently miss server-data-fetching routes) — structurally immune to the skill's "silent coverage gap" warning. Verified live anyway: all 7 real routes present, no self-reference, no private/redirecting URLs.
+- **Structured data**: FAQPage JSON-LD parse-validated on both tools via live `JSON.parse()` against the rendered page, not just eyeballed.
+- **H1 count**: verified exactly 1 per page via live `grep -c` against rendered HTML, not assumed from markup.
+- **Soft-404 handling**: re-confirmed real 404 status (not just custom-page content) via `curl -s -o /dev/null -w "%{http_code}"` against the live static build.
+
+**Cloudflare-specific risk the skill flags for a different platform (Vercel bot-management) but applies here too, differently**: Cloudflare zones ship with "Managed robots.txt" (AI Crawl Control) ON by default, which PREPENDS Disallow rules for GPTBot/ClaudeBot/Google-Extended that override the ones in this repo's `robots.txt` — this is a dashboard setting, invisible from code, and can't be checked until the site is actually deployed to a real Cloudflare Pages project. Flagged for the launch-day checklist, not fixable now.
 
 ## Known CSS gotcha (read before adding more shared component classes)
 `.card`/`.btn`/`.field`/`.badge*` in `global.css` are deliberately NOT wrapped in `@layer components`. Astro compiles each component's scoped `<style>` block to plain unlayered CSS, and unlayered CSS always beats layered CSS regardless of specificity (CSS Cascade Layers spec) — wrapping shared classes in `@layer` made `.card`'s border-color silently lose to Astro's scoped styles on any element with a `data-astro-cid-*` attribute. Root-caused via testing (an inline-style element resolved the same CSS variable correctly; the layered class version on a scoped element didn't), not guessed. Keep new shared classes unlayered too, matching the sibling site's actual proven CSS.

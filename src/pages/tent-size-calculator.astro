@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+	{
+		q: 'How many square feet per person do I need for a seated dinner tent?',
+		a: 'Plan for 15 square feet per guest for seated dining with tables and chairs. This figure is consistent across multiple real rental companies\' own planning guides, not a single source — it accounts for the table, chair, and walking space per person, not just the chair itself.',
+	},
+	{
+		q: 'How much smaller can the tent be for a cocktail-style reception?',
+		a: 'Cocktail or standing receptions need about 6 square feet per guest — less than half the space of seated dining, since there\'s no table and chair footprint per person. This is why the same guest count can fit under a much smaller tent for a cocktail-style event than a seated dinner.',
+	},
+	{
+		q: 'What size tent do I need for 100 guests?',
+		a: 'For 100 guests seated (15 sq ft/person), you need roughly 1,500 sq ft — a 30x50 or 30x60 tent. For 100 guests cocktail-style (6 sq ft/person), you need roughly 600 sq ft — a 20x30 tent is often enough. Add space for a buffet, bar, or dance floor on top of that if your event includes them — use the calculator above with your actual guest count and extras for a precise number.',
+	},
+	{
+		q: 'Do I need extra space for a dance floor, buffet, or DJ booth?',
+		a: 'Yes — these are additional to your per-guest seating space, not included in it. A buffet table typically needs about 100 sq ft, a bar area about 100 sq ft, a DJ or band setup about 100 sq ft, and a dance floor needs roughly 4.5–5 sq ft per guest actually dancing at once (not your total guest count). The calculator above adds these on top of your base seating area when you check them.',
+	},
+	{
+		q: 'Should I round up to the next tent size if I\'m between two sizes?',
+		a: 'Generally yes. Rental companies size tents in fixed increments, so if your calculated square footage falls between two standard sizes, the larger one gives you breathing room for guests who stand near tables, gift/card tables, or last-minute headcount changes — a tent that\'s exactly at capacity on paper often feels cramped in practice.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	title="Tent Size Calculator — Find Your Tent Size by Guest Count | Event Tools"
+	description="Free tent size calculator — enter guest count and seating style to get the exact tent size you need, plus space for a buffet, bar, or dance floor."
+>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<div class="max-w-3xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2 text-text">Tent Size Calculator</h1>
+		<p class="text-text-muted mb-8">
+			Enter your guest count and seating style below to get the square footage you need and the
+			closest standard tent size. Add extras like a buffet, bar, or dance floor if your event
+			includes them.
+		</p>
+
+		<div class="card p-5 sm:p-6 mb-10">
+			<div class="grid sm:grid-cols-2 gap-4 mb-4">
+				<div>
+					<label for="guest-count" class="block text-sm font-medium mb-1 text-text">Guest count</label>
+					<input id="guest-count" type="number" min="1" step="1" value="100" class="field w-full px-3 py-2" />
+				</div>
+				<div>
+					<label for="seating-style" class="block text-sm font-medium mb-1 text-text">Seating style</label>
+					<select id="seating-style" class="field w-full px-3 py-2">
+						<option value="15">Seated dinner (tables &amp; chairs)</option>
+						<option value="6">Cocktail / standing reception</option>
+						<option value="8">Theater style (rows of chairs)</option>
+						<option value="9">Conference / workshop</option>
+					</select>
+				</div>
+			</div>
+
+			<fieldset class="mb-4">
+				<legend class="block text-sm font-medium mb-2 text-text">Extras (add space for)</legend>
+				<div class="flex flex-col gap-2 text-sm text-text">
+					<label class="flex items-center gap-2">
+						<input type="checkbox" id="extra-buffet" class="accent-primary" /> Buffet table (+100 sq ft)
+					</label>
+					<label class="flex items-center gap-2">
+						<input type="checkbox" id="extra-bar" class="accent-primary" /> Bar area (+100 sq ft)
+					</label>
+					<label class="flex items-center gap-2">
+						<input type="checkbox" id="extra-dj" class="accent-primary" /> DJ / band setup (+100 sq ft)
+					</label>
+					<label class="flex items-center gap-2">
+						<input type="checkbox" id="extra-dance" class="accent-primary" /> Dance floor (assumes ~25% of guests dancing at once, 5 sq ft each)
+					</label>
+				</div>
+			</fieldset>
+
+			<div class="border-t border-border pt-4 mt-4">
+				<div class="flex items-center justify-between mb-1">
+					<span class="font-medium text-text">Total space needed</span>
+					<span id="total-sqft" class="font-semibold text-text">0 sq ft</span>
+				</div>
+				<div id="tent-recommendation" class="text-sm font-medium text-primary mt-2"></div>
+				<div id="tent-alternative" class="text-xs text-text-muted mt-1"></div>
+			</div>
+		</div>
+
+		<div class="card p-5 sm:p-6 mb-10 bg-primary/5">
+			<p class="text-sm text-text">
+				Ready to actually book a tent? <a href="https://eventrentalcosts.com/tent-rental-cost/" target="_blank" rel="noopener" class="font-semibold text-primary">See real, published tent rental prices</a>
+				from verified companies on EventRentalCosts.com — actual dollar figures, not vague "call for quote" estimates.
+			</p>
+		</div>
+
+		<article class="prose max-w-none prose-headings:text-text prose-p:text-text prose-a:text-primary prose-strong:text-text">
+			<p>
+				Getting your tent size wrong is expensive in both directions — too small and guests are
+				cramped with nowhere for a buffet line or dance floor; too large and you're paying for
+				space and rental fees you didn't need. The numbers below are the same square-footage-per-guest
+				figures used across multiple real event rental companies' own planning guides — not a
+				single source, a converging industry standard.
+			</p>
+
+			<h2>Space guidelines per person</h2>
+			<ul>
+				<li><strong>Seated dinner (tables &amp; chairs):</strong> 15 square feet per guest</li>
+				<li><strong>Cocktail or standing reception:</strong> 6 square feet per guest</li>
+				<li><strong>Theater style (rows of chairs):</strong> 8 square feet per guest</li>
+				<li><strong>Conference or workshop:</strong> 8–10 square feet per guest</li>
+			</ul>
+			<p>
+				The gap between seated and cocktail-style is the single biggest lever on tent size — the
+				same guest count needs less than half the space without a full table-and-chair setup per
+				person. If your event has a mix (say, cocktail hour then seated dinner), size for the
+				larger requirement, since you need the tent up for both.
+			</p>
+
+			<h2>Extra space for buffet, bar, dance floor, and DJ</h2>
+			<p>
+				These are additions to your base seating area, not included in the per-person figures
+				above:
+			</p>
+			<ul>
+				<li><strong>Buffet table:</strong> about 100 square feet</li>
+				<li><strong>Bar area:</strong> about 100 square feet</li>
+				<li><strong>DJ or band setup:</strong> about 100 square feet</li>
+				<li><strong>Dance floor:</strong> roughly 4.5–5 square feet per guest actually dancing at
+					once — not your total guest count. This calculator assumes about a quarter of your
+					guests are on the floor at any given moment, which is a reasonable planning default,
+					but adjust upward if you know you're hosting an especially dance-heavy crowd.</li>
+			</ul>
+
+			<h2>Common tent sizes and who they fit</h2>
+			<ul>
+				<li><strong>10x20 ft (200 sq ft):</strong> ~13 seated guests, ~33 standing</li>
+				<li><strong>20x20 ft (400 sq ft):</strong> ~26 seated guests, ~50 cocktail-style</li>
+				<li><strong>20x40 ft (800 sq ft):</strong> ~53 seated guests, up to ~100 with a mixed setup</li>
+				<li><strong>30x40 ft (1,200 sq ft):</strong> ~80 seated dining guests comfortably</li>
+				<li><strong>30x60 ft (1,800 sq ft):</strong> ~120 seated dining guests</li>
+				<li><strong>40x80 ft (3,200 sq ft):</strong> ~210 seated dining guests</li>
+			</ul>
+			<p>
+				Rental companies size tents in fixed increments, so your calculated square footage will
+				rarely land exactly on a standard size — when in doubt, round up rather than down.
+				A tent at exactly your calculated capacity often feels tight once real furniture,
+				walkways, and a few guests standing near the edges are accounted for.
+			</p>
+
+			<h2>Frequently asked questions</h2>
+			{faqs.map((f) => (
+				<div class="mb-4">
+					<h3 class="text-lg font-semibold">{f.q}</h3>
+					<p>{f.a}</p>
+				</div>
+			))}
+		</article>
+	</div>
+</Layout>
+
+<script>
+	const TENT_SIZES: { label: string; sqft: number }[] = [
+		{ label: '10x10 ft', sqft: 100 },
+		{ label: '10x20 ft', sqft: 200 },
+		{ label: '10x30 ft', sqft: 300 },
+		{ label: '20x20 ft', sqft: 400 },
+		{ label: '20x30 ft', sqft: 600 },
+		{ label: '20x40 ft', sqft: 800 },
+		{ label: '20x50 ft', sqft: 1000 },
+		{ label: '20x60 ft', sqft: 1200 },
+		{ label: '30x30 ft', sqft: 900 },
+		{ label: '30x40 ft', sqft: 1200 },
+		{ label: '30x50 ft', sqft: 1500 },
+		{ label: '30x60 ft', sqft: 1800 },
+		{ label: '40x40 ft', sqft: 1600 },
+		{ label: '40x60 ft', sqft: 2400 },
+		{ label: '40x80 ft', sqft: 3200 },
+		{ label: '40x100 ft', sqft: 4000 },
+	].sort((a, b) => a.sqft - b.sqft);
+
+	const guestCountEl = document.getElementById('guest-count') as HTMLInputElement;
+	const seatingStyleEl = document.getElementById('seating-style') as HTMLSelectElement;
+	const extraBuffetEl = document.getElementById('extra-buffet') as HTMLInputElement;
+	const extraBarEl = document.getElementById('extra-bar') as HTMLInputElement;
+	const extraDjEl = document.getElementById('extra-dj') as HTMLInputElement;
+	const extraDanceEl = document.getElementById('extra-dance') as HTMLInputElement;
+	const totalSqftEl = document.getElementById('total-sqft') as HTMLSpanElement;
+	const recommendationEl = document.getElementById('tent-recommendation') as HTMLDivElement;
+	const alternativeEl = document.getElementById('tent-alternative') as HTMLDivElement;
+
+	const STORAGE_KEY = 'tent-size-calculator-v1';
+
+	function calculate() {
+		const guests = Math.max(0, Number(guestCountEl.value) || 0);
+		const perPerson = Number(seatingStyleEl.value) || 15;
+
+		let total = guests * perPerson;
+		if (extraBuffetEl.checked) total += 100;
+		if (extraBarEl.checked) total += 100;
+		if (extraDjEl.checked) total += 100;
+		if (extraDanceEl.checked) total += Math.round(guests * 0.25) * 5;
+
+		totalSqftEl.textContent = `${total.toLocaleString()} sq ft`;
+
+		const fit = TENT_SIZES.find((t) => t.sqft >= total);
+		const next = fit ? TENT_SIZES.find((t) => t.sqft > fit.sqft) : null;
+
+		if (!fit) {
+			recommendationEl.textContent = 'This is larger than our standard size list — talk to a rental company about a custom or multi-tent layout.';
+			alternativeEl.textContent = '';
+		} else {
+			recommendationEl.textContent = `Recommended: ${fit.label} tent (${fit.sqft.toLocaleString()} sq ft)`;
+			alternativeEl.textContent = next
+				? `Want more breathing room? Next size up: ${next.label} (${next.sqft.toLocaleString()} sq ft)`
+				: '';
+		}
+
+		save();
+	}
+
+	function save() {
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify({
+				guests: guestCountEl.value,
+				seatingStyle: seatingStyleEl.value,
+				buffet: extraBuffetEl.checked,
+				bar: extraBarEl.checked,
+				dj: extraDjEl.checked,
+				dance: extraDanceEl.checked,
+			})
+		);
+	}
+
+	function load() {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (!raw) return;
+		try {
+			const data = JSON.parse(raw);
+			guestCountEl.value = data.guests ?? '100';
+			seatingStyleEl.value = data.seatingStyle ?? '15';
+			extraBuffetEl.checked = !!data.buffet;
+			extraBarEl.checked = !!data.bar;
+			extraDjEl.checked = !!data.dj;
+			extraDanceEl.checked = !!data.dance;
+		} catch {
+			// ignore malformed saved state, defaults already set in markup
+		}
+	}
+
+	[guestCountEl, seatingStyleEl, extraBuffetEl, extraBarEl, extraDjEl, extraDanceEl].forEach((el) => {
+		el.addEventListener('input', calculate);
+		el.addEventListener('change', calculate);
+	});
+
+	load();
+	calculate();
+</script>
