@@ -1,0 +1,353 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+	{
+		q: 'What percentage of a wedding budget should go to the venue?',
+		a: 'Based on The Knot\'s real-couples spending data, venue and rentals account for about 29% of the average wedding budget — typically the single largest line item. That said, this varies a lot by region and venue type; an all-inclusive venue that bundles catering can push that percentage much higher, while a low-cost or free venue (a backyard, a family member\'s property) frees up budget for other categories.',
+	},
+	{
+		q: 'How much should I budget for catering per guest?',
+		a: 'Catering, cake, and drinks typically make up about 24% of a wedding budget. In dollar terms, buffet-style catering commonly runs $60–$95 per guest, while plated service runs $90–$150 per guest, before bar service. Use this tool\'s Catering & Drinks category with your actual per-guest quote once you have one — the percentage guideline is a starting point, not a substitute for a real vendor quote.',
+	},
+	{
+		q: 'Is 10% enough for a wedding photographer?',
+		a: 'For most budgets, yes — photography and videography average around 10% of total spend, which lines up with typical full-day coverage pricing. If photography and video are a higher priority for you than average, it\'s reasonable to shift budget into that category from a lower-priority one like favors or transportation.',
+	},
+	{
+		q: 'How much should I set aside as a miscellaneous buffer?',
+		a: 'A buffer of at least 5–10% of your total budget is a standard recommendation for any event, wedding or otherwise. Unexpected costs are close to universal — a vendor price increase, a last-minute rental, gratuities that weren\'t itemized. Budgets built with zero buffer are the ones most likely to run over.',
+	},
+	{
+		q: 'Do these percentages work for a birthday party or corporate event, not just a wedding?',
+		a: 'The wedding preset in this tool is backed by a named real-data source (The Knot\'s survey of actual couples). The birthday, corporate, and casual-party presets are general planning heuristics rather than a specific published study — reasonable starting points, but you should feel free to adjust every category to match your actual quotes and priorities. That flexibility is the point of the tool.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	title="Party & Event Budget Planner — Free Calculator by Category | Event Tools"
+	description="Free party and wedding budget planner. Enter your total budget, get a category-by-category breakdown (venue, catering, decor, and more) based on real spending data, and adjust every line to fit your event."
+>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<div class="max-w-3xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2">Party &amp; Event Budget Planner</h1>
+		<p class="text-slate-600 dark:text-slate-400 mb-8">
+			Enter your total budget and event type below — you'll get a category-by-category
+			breakdown you can adjust to match your real quotes. Your numbers save automatically in
+			this browser.
+		</p>
+
+		<div class="rounded-xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 mb-10">
+			<div class="grid sm:grid-cols-2 gap-4 mb-6">
+				<div>
+					<label for="event-type" class="block text-sm font-medium mb-1">Event type</label>
+					<select
+						id="event-type"
+						class="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+					>
+						<option value="wedding">Wedding</option>
+						<option value="birthday">Birthday Party</option>
+						<option value="corporate">Corporate Event</option>
+						<option value="casual">Casual Party / Gathering</option>
+					</select>
+				</div>
+				<div>
+					<label for="total-budget" class="block text-sm font-medium mb-1">Total budget ($)</label>
+					<input
+						id="total-budget"
+						type="number"
+						min="0"
+						step="1"
+						value="5000"
+						class="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+					/>
+				</div>
+			</div>
+
+			<div id="categories" class="space-y-3 mb-4"></div>
+
+			<div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 mt-4">
+				<span class="font-medium">Allocated total</span>
+				<span id="allocated-total" class="font-semibold">$0</span>
+			</div>
+			<div id="budget-status" class="text-sm mt-1 mb-4"></div>
+
+			<div class="flex flex-wrap gap-3">
+				<button id="reset-btn" type="button" class="rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">
+					Reset to suggested split
+				</button>
+				<button id="print-btn" type="button" class="rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">
+					Print / Save as PDF
+				</button>
+			</div>
+		</div>
+
+		<article class="prose dark:prose-invert max-w-none">
+			<p>
+				Every event budget starts with the same question: how much should actually go to each
+				category? Guess wrong and you either overspend on venue and scramble to cover catering,
+				or under-budget photography and get a rushed, disappointing result. This planner gives
+				you a real starting split, backed by actual spending data for weddings, that you can then
+				adjust line by line to match your own quotes and priorities.
+			</p>
+
+			<h2>Where the wedding percentages come from</h2>
+			<p>
+				The wedding preset in this tool is based on The Knot's survey of real couples' wedding
+				spending, not a guess. According to that data, the average wedding budget breaks down
+				roughly as: venue and rentals 29%, catering/cake/drinks 24%, photography and
+				videography 10%, floral design and decor 9%, attire and beauty 6%, and planning/
+				coordination 5%, with the remainder split across entertainment, transportation, and a
+				miscellaneous buffer. This tool uses that structure as the wedding default — venue and
+				catering combined make up over half of a typical wedding budget, which is worth knowing
+				before you start getting quotes.
+			</p>
+
+			<h2>Birthday, corporate, and casual event presets</h2>
+			<p>
+				Unlike the wedding split, the birthday, corporate, and casual-party presets in this tool
+				are general planning heuristics rather than a specific named study — there isn't a
+				comparably large public dataset for these event types the way there is for weddings. They're
+				built around the same basic logic (venue and catering dominate, followed by
+				decor/entertainment, with a buffer for the unexpected), scaled to how those event types
+				typically differ from weddings: less spent proportionally on attire and florals, more on
+				entertainment and catering relative to venue for a casual party.
+			</p>
+
+			<h2>How to use the numbers this tool gives you</h2>
+			<p>
+				Start with your total budget and event type, then treat the suggested per-category
+				dollar amounts as a first draft, not a final answer. As real quotes come in — a caterer's
+				per-head price, a venue's rental fee, a photographer's package — replace the estimate in
+				that category with the real number. The "Allocated total" line updates automatically so
+				you always know whether you're on track, over, or have room to spend more somewhere else.
+			</p>
+			<p>
+				A category running over its suggested percentage isn't automatically a problem — it just
+				means another category needs to come down to compensate, or your total budget needs to
+				grow. This tool makes that trade-off visible instead of hiding it until the final invoice.
+			</p>
+
+			<h2>Why a buffer category matters</h2>
+			<p>
+				Every preset in this tool includes a miscellaneous/buffer line, and it's worth resisting
+				the temptation to zero it out and redistribute that money elsewhere. Gratuities that
+				weren't itemized in a vendor quote, a last-minute rental add-on, a price increase between
+				booking and event date — these are close to universal across real events, and a budget
+				with no buffer is the one most likely to run over its total.
+			</p>
+
+			<h2>Frequently asked questions</h2>
+			{faqs.map((f) => (
+				<div class="mb-4">
+					<h3 class="text-lg font-semibold">{f.q}</h3>
+					<p>{f.a}</p>
+				</div>
+			))}
+		</article>
+	</div>
+</Layout>
+
+<script>
+	type Preset = { label: string; pct: number }[];
+
+	const PRESETS: Record<string, Preset> = {
+		wedding: [
+			{ label: 'Venue & Rentals', pct: 29 },
+			{ label: 'Catering & Drinks', pct: 24 },
+			{ label: 'Photography & Video', pct: 10 },
+			{ label: 'Decor & Flowers', pct: 9 },
+			{ label: 'Entertainment & Music', pct: 6 },
+			{ label: 'Attire & Beauty', pct: 6 },
+			{ label: 'Planning & Coordination', pct: 5 },
+			{ label: 'Transportation', pct: 2 },
+			{ label: 'Miscellaneous / Buffer', pct: 9 },
+		],
+		birthday: [
+			{ label: 'Venue & Rentals', pct: 25 },
+			{ label: 'Catering & Drinks', pct: 30 },
+			{ label: 'Decor', pct: 15 },
+			{ label: 'Entertainment', pct: 15 },
+			{ label: 'Photography', pct: 5 },
+			{ label: 'Favors / Miscellaneous', pct: 10 },
+		],
+		corporate: [
+			{ label: 'Venue & Rentals', pct: 30 },
+			{ label: 'Catering & Drinks', pct: 30 },
+			{ label: 'AV & Entertainment', pct: 15 },
+			{ label: 'Decor', pct: 10 },
+			{ label: 'Photography & Video', pct: 5 },
+			{ label: 'Miscellaneous / Buffer', pct: 10 },
+		],
+		casual: [
+			{ label: 'Venue & Rentals', pct: 20 },
+			{ label: 'Catering & Drinks', pct: 35 },
+			{ label: 'Decor', pct: 10 },
+			{ label: 'Entertainment', pct: 15 },
+			{ label: 'Miscellaneous / Buffer', pct: 20 },
+		],
+	};
+
+	const STORAGE_KEY = 'party-budget-planner-v1';
+
+	const eventTypeEl = document.getElementById('event-type') as HTMLSelectElement;
+	const totalBudgetEl = document.getElementById('total-budget') as HTMLInputElement;
+	const categoriesEl = document.getElementById('categories') as HTMLDivElement;
+	const allocatedTotalEl = document.getElementById('allocated-total') as HTMLSpanElement;
+	const budgetStatusEl = document.getElementById('budget-status') as HTMLDivElement;
+	const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+	const printBtn = document.getElementById('print-btn') as HTMLButtonElement;
+
+	let currentValues: Record<string, number> = {};
+
+	function currency(n: number): string {
+		return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+	}
+
+	function applyPreset(eventType: string, totalBudget: number) {
+		const preset = PRESETS[eventType];
+		currentValues = {};
+		for (const cat of preset) {
+			currentValues[cat.label] = Math.round((cat.pct / 100) * totalBudget);
+		}
+		render();
+		save();
+	}
+
+	function render() {
+		const totalBudget = Number(totalBudgetEl.value) || 0;
+		const preset = PRESETS[eventTypeEl.value];
+
+		categoriesEl.innerHTML = '';
+		let allocated = 0;
+
+		for (const cat of preset) {
+			const value = currentValues[cat.label] ?? 0;
+			allocated += value;
+			const pct = totalBudget > 0 ? ((value / totalBudget) * 100).toFixed(1) : '0';
+
+			const row = document.createElement('div');
+			row.className = 'flex items-center gap-3';
+			row.innerHTML = `
+				<label class="flex-1 text-sm">${cat.label}</label>
+				<span class="text-xs text-slate-500 dark:text-slate-400 w-12 text-right">${pct}%</span>
+				<input type="number" min="0" step="1" value="${value}"
+					data-category="${cat.label}"
+					class="w-28 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5 text-sm text-right" />
+			`;
+			categoriesEl.appendChild(row);
+		}
+
+		allocatedTotalEl.textContent = currency(allocated);
+
+		const diff = totalBudget - allocated;
+		if (Math.abs(diff) < 1) {
+			budgetStatusEl.textContent = 'Exactly on budget.';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-green-600 dark:text-green-400';
+		} else if (diff > 0) {
+			budgetStatusEl.textContent = `${currency(diff)} under budget — room to add or upgrade a category.`;
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-slate-500 dark:text-slate-400';
+		} else {
+			budgetStatusEl.textContent = `${currency(Math.abs(diff))} over budget — trim a category or increase your total.`;
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-red-600 dark:text-red-400';
+		}
+
+		categoriesEl.querySelectorAll('input[data-category]').forEach((el) => {
+			el.addEventListener('input', (e) => {
+				const target = e.target as HTMLInputElement;
+				const cat = target.dataset.category!;
+				currentValues[cat] = Number(target.value) || 0;
+				renderTotalsOnly();
+				save();
+			});
+		});
+	}
+
+	function renderTotalsOnly() {
+		const totalBudget = Number(totalBudgetEl.value) || 0;
+		let allocated = 0;
+		for (const v of Object.values(currentValues)) allocated += v;
+		allocatedTotalEl.textContent = currency(allocated);
+
+		const diff = totalBudget - allocated;
+		if (Math.abs(diff) < 1) {
+			budgetStatusEl.textContent = 'Exactly on budget.';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-green-600 dark:text-green-400';
+		} else if (diff > 0) {
+			budgetStatusEl.textContent = `${currency(diff)} under budget — room to add or upgrade a category.`;
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-slate-500 dark:text-slate-400';
+		} else {
+			budgetStatusEl.textContent = `${currency(Math.abs(diff))} over budget — trim a category or increase your total.`;
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-red-600 dark:text-red-400';
+		}
+
+		// keep the % labels in sync too
+		const pctSpans = categoriesEl.querySelectorAll('span.text-xs');
+		const preset = PRESETS[eventTypeEl.value];
+		preset.forEach((cat, i) => {
+			const value = currentValues[cat.label] ?? 0;
+			const pct = totalBudget > 0 ? ((value / totalBudget) * 100).toFixed(1) : '0';
+			const span = pctSpans[i] as HTMLElement | undefined;
+			if (span) span.textContent = `${pct}%`;
+		});
+	}
+
+	function save() {
+		localStorage.setItem(
+			STORAGE_KEY,
+			JSON.stringify({
+				eventType: eventTypeEl.value,
+				totalBudget: totalBudgetEl.value,
+				values: currentValues,
+			})
+		);
+	}
+
+	function load(): boolean {
+		const raw = localStorage.getItem(STORAGE_KEY);
+		if (!raw) return false;
+		try {
+			const data = JSON.parse(raw);
+			eventTypeEl.value = data.eventType || 'wedding';
+			totalBudgetEl.value = data.totalBudget || '5000';
+			currentValues = data.values || {};
+			render();
+			return true;
+		} catch {
+			return false;
+		}
+	}
+
+	eventTypeEl.addEventListener('change', () => {
+		applyPreset(eventTypeEl.value, Number(totalBudgetEl.value) || 0);
+	});
+
+	totalBudgetEl.addEventListener('change', () => {
+		applyPreset(eventTypeEl.value, Number(totalBudgetEl.value) || 0);
+	});
+
+	resetBtn.addEventListener('click', () => {
+		applyPreset(eventTypeEl.value, Number(totalBudgetEl.value) || 0);
+	});
+
+	printBtn.addEventListener('click', () => {
+		window.print();
+	});
+
+	const loaded = load();
+	if (!loaded) {
+		applyPreset('wedding', 5000);
+	}
+</script>

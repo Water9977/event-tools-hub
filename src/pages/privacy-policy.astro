@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Privacy Policy | Event Tools" description="How Event Tools handles your data. Short version: our calculators run entirely in your browser and don't send your inputs anywhere.">
+	<div class="max-w-3xl mx-auto px-4 py-12 prose dark:prose-invert">
+		<h1 class="text-3xl font-bold mb-2">Privacy Policy</h1>
+		<p class="text-slate-500 dark:text-slate-400 mb-8">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+
+		<h2>The short version</h2>
+		<p>
+			Every calculator and tool on this site runs entirely in your web browser. When you type a
+			number into a field or drag an item on screen, that data stays on your device — it is never
+			sent to our servers, because we don't have any servers processing your inputs. We don't
+			require an account, and we don't ask for your name, email, or any personal information to
+			use a tool.
+		</p>
+
+		<h2>What we do collect</h2>
+		<p>Like most websites, we use a small number of third-party services that collect limited technical data automatically:</p>
+		<ul>
+			<li>
+				<strong>Google Analytics</strong> — anonymized usage statistics (pages visited, approximate
+				location by country/region, device type) to understand which tools are useful and which
+				aren't.
+			</li>
+			<li>
+				<strong>Google AdSense</strong> — once enabled, may use cookies to show relevant ads. You can
+				opt out of personalized advertising through
+				<a href="https://adssettings.google.com" target="_blank" rel="noopener">Google's Ad Settings</a>.
+			</li>
+			<li>
+				<strong>Cloudflare</strong> — our hosting provider processes standard web server logs
+				(IP address, browser type) for security and performance, as any host does.
+			</li>
+		</ul>
+
+		<h2>Local storage</h2>
+		<p>
+			Some tools save your inputs in your browser's local storage (for example, a budget planner
+			remembering your entries between visits). This data never leaves your device and is fully
+			under your control — clearing your browser data removes it.
+		</p>
+
+		<h2>Contact</h2>
+		<p>
+			Questions about this policy? Reach out via the <a href="/contact">Contact page</a>.
+		</p>
+	</div>
+</Layout>
