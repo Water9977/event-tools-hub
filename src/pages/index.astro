@@ -1,17 +1,67 @@
 ---
+import Layout from '../layouts/Layout.astro';
 
+const tools = [
+	{
+		slug: 'party-budget-planner',
+		name: 'Party & Event Budget Planner',
+		description: 'Get a category-by-category budget split for a wedding, birthday, or corporate event — backed by real spending data, adjustable to your own quotes.',
+		teaser: 'Wedding split backed by real data',
+	},
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+	title="Event Tools — Free Calculators & Planners for Parties, Weddings & Events"
+	description="Free, no-signup calculators and planners for event and party planning. Every tool runs in your browser — no account, no data collection."
+>
+	<section class="hero">
+		<div class="max-w-5xl mx-auto px-4">
+			<h1 class="text-4xl font-bold mb-3 text-text">Plan your event with real numbers</h1>
+			<p class="text-lg text-text-muted max-w-xl">
+				Free calculators and planners for parties, weddings, and events. No account, no
+				signup — every tool runs right here in your browser.
+			</p>
+		</div>
+	</section>
+
+	<section class="max-w-5xl mx-auto px-4 py-4">
+		<h2 class="text-xl font-bold mb-4 text-text">All tools</h2>
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			{tools.map((tool) => (
+				<a href={`/${tool.slug}`} class="card tool-card p-6">
+					<h3 class="text-lg font-bold mb-2 text-text">{tool.name}</h3>
+					<p class="text-sm text-text-muted mb-3">{tool.description}</p>
+					<p class="text-sm font-semibold text-primary mb-4">{tool.teaser}</p>
+					<span class="text-sm font-semibold text-primary">Open tool &rarr;</span>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<section class="max-w-5xl mx-auto px-4 py-16 text-text-muted">
+		<h2 class="text-xl font-bold mb-3 text-text">Why real numbers, not just a tool</h2>
+		<p class="max-w-2xl">
+			Most planning calculators bury real methodology behind a generic result. Every tool here
+			shows its work — where the default numbers come from, and when they're a named data
+			source versus a general starting point — so you can trust the estimate or know exactly
+			when to override it with your own quote. Event Tools is a companion project to
+			<a href="https://eventrentalcosts.com" target="_blank" rel="noopener" class="text-primary font-semibold">EventRentalCosts.com</a>,
+			which tracks real, verified rental pricing across US metro areas.
+		</p>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding-block: 3rem 2rem;
+		background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 6%, transparent), transparent);
+	}
+	.tool-card {
+		position: relative;
+	}
+	.tool-card:hover {
+		border-color: var(--color-primary);
+		text-decoration: none;
+	}
+</style>

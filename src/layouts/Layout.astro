@@ -43,17 +43,19 @@ const siteName = 'Event Tools';
 			}
 		</script>
 	</head>
-	<body class="min-h-screen flex flex-col bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-		<header class="border-b border-slate-200 dark:border-slate-800">
+	<body class="min-h-screen flex flex-col bg-bg text-text">
+		<header class="border-b border-border bg-surface">
 			<nav class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-				<a href="/" class="font-semibold text-lg">{siteName}</a>
-				<div class="flex items-center gap-6 text-sm">
-					<a href="/" class="hover:underline">All Tools</a>
+				<a href="/" class="font-extrabold text-lg text-text hover:text-primary hover:no-underline">
+					Event<span class="font-medium text-text-muted">Tools</span>
+				</a>
+				<div class="flex items-center gap-6 text-sm font-semibold">
+					<a href="/" class="text-text hover:text-primary hover:no-underline">All Tools</a>
 					<button
 						id="theme-toggle"
 						type="button"
 						aria-label="Toggle dark mode"
-						class="rounded-md border border-slate-300 dark:border-slate-700 px-2 py-1 text-xs"
+						class="rounded-md border border-border px-2 py-1 text-xs font-semibold text-text-muted hover:text-primary hover:border-primary"
 					>
 						<span class="dark:hidden">Dark</span>
 						<span class="hidden dark:inline">Light</span>
@@ -66,14 +68,22 @@ const siteName = 'Event Tools';
 			<slot />
 		</main>
 
-		<footer class="border-t border-slate-200 dark:border-slate-800 mt-16">
-			<div class="max-w-5xl mx-auto px-4 py-8 text-sm text-slate-500 dark:text-slate-400 flex flex-wrap gap-x-6 gap-y-2 justify-between">
-				<p>&copy; {new Date().getFullYear()} {siteName}. Free tools, no signup required.</p>
-				<div class="flex gap-4">
-					<a href="/about" class="hover:underline">About</a>
-					<a href="/contact" class="hover:underline">Contact</a>
-					<a href="/privacy-policy" class="hover:underline">Privacy Policy</a>
-					<a href="/terms" class="hover:underline">Terms</a>
+		<footer class="border-t border-border bg-surface mt-16">
+			<div class="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-4">
+				<p class="text-sm text-text-muted max-w-xl">
+					Event Tools is a free, independently-run set of calculators and planners. No account,
+					no data collection beyond anonymized analytics — every tool runs in your browser. A
+					companion project to
+					<a href="https://eventrentalcosts.com" target="_blank" rel="noopener">EventRentalCosts.com</a>.
+				</p>
+				<div class="flex flex-wrap items-center justify-between gap-4 text-sm">
+					<div class="flex gap-4 font-semibold text-text-muted">
+						<a href="/about" class="hover:text-primary hover:no-underline">About</a>
+						<a href="/contact" class="hover:text-primary hover:no-underline">Contact</a>
+						<a href="/privacy-policy" class="hover:text-primary hover:no-underline">Privacy Policy</a>
+						<a href="/terms" class="hover:text-primary hover:no-underline">Terms</a>
+					</div>
+					<p class="text-xs text-text-muted">&copy; {new Date().getFullYear()} Event Tools</p>
 				</div>
 			</div>
 		</footer>

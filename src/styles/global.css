@@ -1,3 +1,147 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+	/* Light palette — matches eventrentalcosts.com exactly (DESIGN.md) */
+	--bg: #fbfaf8;
+	--surface: #ffffff;
+	--border: #e4ded4;
+	--text: #1f1b16;
+	--text-muted: #6b6257;
+	--primary: #b5502f;
+	--primary-dark: #8f3d22;
+	--accent: #2f6b5e;
+	--success: #2f6b3a;
+	--unknown: #8a8175;
+}
+
+:root.dark {
+	/* Dark palette — same hue families, adjusted for dark-background contrast.
+	   Not a generic slate swap: stays warm-toned to keep brand continuity with
+	   the light mode (and the sibling site) rather than reading as a different
+	   product at night. */
+	--bg: #17130f;
+	--surface: #211c17;
+	--border: #3a332b;
+	--text: #f2ede6;
+	--text-muted: #a89e90;
+	--primary: #e07a52;
+	--primary-dark: #c8663f;
+	--accent: #4f9484;
+	--success: #4f9457;
+	--unknown: #a89e90;
+}
+
+@theme inline {
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-border: var(--border);
+	--color-text: var(--text);
+	--color-text-muted: var(--text-muted);
+	--color-primary: var(--primary);
+	--color-primary-dark: var(--primary-dark);
+	--color-accent: var(--accent);
+	--color-success: var(--success);
+	--color-unknown: var(--unknown);
+}
+
+@theme {
+	--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 16px;
+}
+
+/* Base element styles and shared component classes are intentionally NOT
+   wrapped in @layer base/@layer components here. Astro compiles each
+   component's scoped <style> block to plain, unlayered CSS — and per the
+   CSS Cascade Layers spec, unlayered rules always beat layered rules
+   regardless of specificity or source order. Wrapping these in @layer
+   caused .card's border-color to silently lose to Astro's per-component
+   scoped styles even when those styles didn't touch border-color directly
+   (found via testing: an isolated inline-style element resolved the CSS
+   variable correctly, but the same variable used inside @layer components
+   .card did not, on any element that also had an Astro data-astro-cid
+   scoping attribute). The sibling site (eventrentalcosts.com) never uses
+   @layer for these either — matching that proven pattern. */
+
+html {
+	font-family: var(--font-sans);
+}
+body {
+	background: var(--color-bg);
+	color: var(--color-text);
+	line-height: 1.55;
+}
+a {
+	color: var(--color-primary);
+}
+a:hover {
+	text-decoration: underline;
+}
+
+.btn {
+	display: inline-block;
+	background: var(--color-primary);
+	color: #fff;
+	padding: 0.75rem 1.5rem;
+	border-radius: var(--radius-md);
+	font-weight: 600;
+	border: none;
+	cursor: pointer;
+}
+.btn:hover {
+	background: var(--color-primary-dark);
+	text-decoration: none;
+}
+.btn-secondary {
+	display: inline-block;
+	background: transparent;
+	color: var(--color-primary);
+	border: 1.5px solid var(--color-primary);
+	padding: 0.75rem 1.5rem;
+	border-radius: var(--radius-md);
+	font-weight: 600;
+	cursor: pointer;
+}
+.btn-secondary:hover {
+	background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+.card {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 1px 2px rgba(31, 27, 22, 0.06), 0 1px 3px rgba(31, 27, 22, 0.08);
+}
+.dark .card {
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.24);
+}
+.field {
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text);
+	border-radius: var(--radius-sm);
+}
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3em;
+	font-size: 0.8rem;
+	font-weight: 600;
+	padding: 0.2em 0.6em;
+	border-radius: 999px;
+}
+.badge-yes {
+	background: color-mix(in srgb, var(--color-success) 12%, transparent);
+	color: var(--color-success);
+}
+.badge-no {
+	background: color-mix(in srgb, var(--color-text-muted) 12%, transparent);
+	color: var(--color-text-muted);
+}
+.badge-unknown {
+	background: color-mix(in srgb, var(--color-unknown) 10%, transparent);
+	color: var(--color-unknown);
+}

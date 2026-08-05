@@ -20,7 +20,7 @@ For each tool above:
 
 ## Site-wide (do once, before or alongside tool #1)
 - [x] Astro project init (v7.1.6) + Tailwind 4 (class-based dark mode via `@custom-variant`) + Cloudflare adapter (`output: 'static'`) + sitemap integration
-- [ ] Design pass with the `frontend-design` skill — current layout is clean but plain Tailwind defaults, not yet given an intentional visual-design pass. Decided NOT to fetch the video's external `getdesign@latest`/web-design-guidelines npx packages since this harness has an equivalent built-in skill; use that instead when doing the design pass, don't reach for the external ones.
+- [x] Design pass to match `DESIGN.md` — done, verified live (computed-style checks, not just visual trust). Kept dark mode per your call ("include dark mode too if its the need") — light mode matches the sibling site's palette exactly (verified: bg `#fbfaf8`, card `#ffffff`, border `#e4ded4`, primary `#b5502f`, all confirmed via `getComputedStyle`), dark mode uses a brand-consistent warm-dark variant, not generic slate.
 - [x] Privacy Policy, Terms, About, Contact pages (AdSense requirement) — real content, not filler. Contact page uses the account owner's real email; swap to a dedicated address if preferred.
 - [x] 404 page (custom, noindex) — verified live, unknown routes correctly return 404 via the custom page
 - [x] robots.txt (static, with explicit AI-crawler allow blocks) + sitemap-index.xml (via @astrojs/sitemap, auto-generated at build)
@@ -28,6 +28,11 @@ For each tool above:
 - [ ] Google Analytics
 - [ ] Google Search Console + Bing Webmaster Tools submission on launch day
 - [ ] Homepage — still the Astro scaffold placeholder, needs real tool-listing content once more tools exist (was going to wire it after tool #1, doing it next)
+
+## Known CSS gotcha (read before adding more shared component classes)
+`.card`/`.btn`/`.field`/`.badge*` in `global.css` are deliberately NOT wrapped in `@layer components`. Astro compiles each component's scoped `<style>` block to plain unlayered CSS, and unlayered CSS always beats layered CSS regardless of specificity (CSS Cascade Layers spec) — wrapping shared classes in `@layer` made `.card`'s border-color silently lose to Astro's scoped styles on any element with a `data-astro-cid-*` attribute. Root-caused via testing (an inline-style element resolved the same CSS variable correctly; the layered class version on a scoped element didn't), not guessed. Keep new shared classes unlayered too, matching the sibling site's actual proven CSS.
+
+**Related gotcha:** don't put `transition: <property>` on an element where that property's value comes from a `:root`/`:root.dark`-level CSS custom property (i.e. any of the theme colors). Confirmed via testing: toggling dark mode left `.tool-card`'s `border-color` stuck at the pre-toggle value when a hover `transition: border-color` was declared — even outside any hover interaction, even with a 300ms wait before checking. Removing the transition fixed it immediately, in both directions. The sibling site's CSS has no transitions on its hover color changes either — matches proven precedent, not just a workaround.
 
 ## Known environment quirk (read before running `npm run dev` in this project)
 `npm run dev` (wrangler/Miniflare's local Cloudflare simulation via `@astrojs/cloudflare`) fails repeatedly in this sandbox — it tries to reach `workers.cloudflare.com` to simulate the `cf` request object, that fetch fails (DNS/timeout), and unlike `npm run build` (clean fallback), dev mode cascades this into 500s on every request. Confirmed via [cloudflare/workers-sdk#3460](https://github.com/cloudflare/workers-sdk/issues/3460) — known issue, not a bug in this project's code. **Workaround: build first (`npm run build`), then serve the real static output with `npx serve dist/client -l <port>`** (note: `dist/client`, not `dist` — the Cloudflare adapter nests static output under `client/` even in `output: 'static'` mode) — this is also a more accurate test of production behavior since Cloudflare Pages serves `dist/client`'s contents directly, no Workers runtime involved for a purely static site.
@@ -37,6 +42,9 @@ For each tool above:
 - [ ] Drink/Alcohol Calculator, Food/Catering Calculator — deprioritized (Medium KD + confirmed AIO hit for alcohol; confirmed AIO hit for food). Revisit only with a genuinely different angle (shopping-list export, multi-type inventory) the AI Overview can't replicate.
 - [ ] Dev-tool cluster (CSS box-shadow generator etc., Antigravity's find) — better raw search volume than event tools, but zero synergy with eventrentalcosts.com. Not started; candidate for a second cluster after the event hub is live and generating real GSC data.
 - [ ] Google AdSense application — wait for 10+ daily users, per the playbook's own threshold. Applying at zero traffic risks a rejection on record.
+
+## Dev-tooling hygiene (not urgent, not shipped to production)
+- [ ] `npm audit`: 5 vulnerabilities (4 moderate, 1 high) in `undici`, transitive via wrangler/miniflare/@astrojs/cloudflare's dev-time tooling. Not in the production static build, not a runtime risk to the deployed site. Fix requires a breaking wrangler major bump (`npm audit fix --force` → wrangler 4.35.0) — didn't do this reactively, revisit deliberately when there's time to verify the adapter still works after the bump.
 
 ## AdSense hard constraints (do not violate)
 - No finance/health/legal/insurance/tax/medical/salary tools, ever — confirmed permanent-rejection pattern from Google's own AdSense forum

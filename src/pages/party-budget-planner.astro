@@ -42,20 +42,20 @@ const faqSchema = {
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 	<div class="max-w-3xl mx-auto px-4 py-10">
-		<h1 class="text-3xl font-bold mb-2">Party &amp; Event Budget Planner</h1>
-		<p class="text-slate-600 dark:text-slate-400 mb-8">
+		<h1 class="text-3xl font-bold mb-2 text-text">Party &amp; Event Budget Planner</h1>
+		<p class="text-text-muted mb-8">
 			Enter your total budget and event type below — you'll get a category-by-category
 			breakdown you can adjust to match your real quotes. Your numbers save automatically in
 			this browser.
 		</p>
 
-		<div class="rounded-xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 mb-10">
+		<div class="card p-5 sm:p-6 mb-10">
 			<div class="grid sm:grid-cols-2 gap-4 mb-6">
 				<div>
-					<label for="event-type" class="block text-sm font-medium mb-1">Event type</label>
+					<label for="event-type" class="block text-sm font-medium mb-1 text-text">Event type</label>
 					<select
 						id="event-type"
-						class="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+						class="field w-full px-3 py-2"
 					>
 						<option value="wedding">Wedding</option>
 						<option value="birthday">Birthday Party</option>
@@ -64,37 +64,37 @@ const faqSchema = {
 					</select>
 				</div>
 				<div>
-					<label for="total-budget" class="block text-sm font-medium mb-1">Total budget ($)</label>
+					<label for="total-budget" class="block text-sm font-medium mb-1 text-text">Total budget ($)</label>
 					<input
 						id="total-budget"
 						type="number"
 						min="0"
 						step="1"
 						value="5000"
-						class="w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2"
+						class="field w-full px-3 py-2"
 					/>
 				</div>
 			</div>
 
 			<div id="categories" class="space-y-3 mb-4"></div>
 
-			<div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 mt-4">
-				<span class="font-medium">Allocated total</span>
-				<span id="allocated-total" class="font-semibold">$0</span>
+			<div class="flex items-center justify-between border-t border-border pt-4 mt-4">
+				<span class="font-medium text-text">Allocated total</span>
+				<span id="allocated-total" class="font-semibold text-text">$0</span>
 			</div>
 			<div id="budget-status" class="text-sm mt-1 mb-4"></div>
 
 			<div class="flex flex-wrap gap-3">
-				<button id="reset-btn" type="button" class="rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">
+				<button id="reset-btn" type="button" class="btn-secondary text-sm py-2 px-4">
 					Reset to suggested split
 				</button>
-				<button id="print-btn" type="button" class="rounded-md border border-slate-300 dark:border-slate-700 px-4 py-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800">
+				<button id="print-btn" type="button" class="btn-secondary text-sm py-2 px-4">
 					Print / Save as PDF
 				</button>
 			</div>
 		</div>
 
-		<article class="prose dark:prose-invert max-w-none">
+		<article class="prose max-w-none prose-headings:text-text prose-p:text-text prose-a:text-primary prose-strong:text-text">
 			<p>
 				Every event budget starts with the same question: how much should actually go to each
 				category? Guess wrong and you either overspend on venue and scramble to cover catering,
@@ -241,11 +241,11 @@ const faqSchema = {
 			const row = document.createElement('div');
 			row.className = 'flex items-center gap-3';
 			row.innerHTML = `
-				<label class="flex-1 text-sm">${cat.label}</label>
-				<span class="text-xs text-slate-500 dark:text-slate-400 w-12 text-right">${pct}%</span>
+				<label class="flex-1 text-sm text-text">${cat.label}</label>
+				<span class="text-xs text-text-muted w-12 text-right">${pct}%</span>
 				<input type="number" min="0" step="1" value="${value}"
 					data-category="${cat.label}"
-					class="w-28 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1.5 text-sm text-right" />
+					class="field w-28 px-2 py-1.5 text-sm text-right" />
 			`;
 			categoriesEl.appendChild(row);
 		}
@@ -255,13 +255,13 @@ const faqSchema = {
 		const diff = totalBudget - allocated;
 		if (Math.abs(diff) < 1) {
 			budgetStatusEl.textContent = 'Exactly on budget.';
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-green-600 dark:text-green-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-success font-medium';
 		} else if (diff > 0) {
 			budgetStatusEl.textContent = `${currency(diff)} under budget — room to add or upgrade a category.`;
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-slate-500 dark:text-slate-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-text-muted';
 		} else {
 			budgetStatusEl.textContent = `${currency(Math.abs(diff))} over budget — trim a category or increase your total.`;
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-red-600 dark:text-red-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-primary font-medium';
 		}
 
 		categoriesEl.querySelectorAll('input[data-category]').forEach((el) => {
@@ -284,13 +284,13 @@ const faqSchema = {
 		const diff = totalBudget - allocated;
 		if (Math.abs(diff) < 1) {
 			budgetStatusEl.textContent = 'Exactly on budget.';
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-green-600 dark:text-green-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-success font-medium';
 		} else if (diff > 0) {
 			budgetStatusEl.textContent = `${currency(diff)} under budget — room to add or upgrade a category.`;
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-slate-500 dark:text-slate-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-text-muted';
 		} else {
 			budgetStatusEl.textContent = `${currency(Math.abs(diff))} over budget — trim a category or increase your total.`;
-			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-red-600 dark:text-red-400';
+			budgetStatusEl.className = 'text-sm mt-1 mb-4 text-primary font-medium';
 		}
 
 		// keep the % labels in sync too
