@@ -1,0 +1,318 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+	{
+		q: 'Is Base64 encryption? Is it safe for passwords or secrets?',
+		a: 'No — Base64 is not encryption, it\'s just a different way of representing the same data. Anyone can decode Base64 back to the original text instantly, with no key or password required (this tool does it with one click). Never use Base64 as a substitute for actual encryption, and never assume Base64-encoded text in a URL, cookie, or config file is "hidden" — treat it as fully readable plain text, because it is.',
+	},
+	{
+		q: 'Why does my Base64 string end with = or == signs?',
+		a: 'Base64 encodes data in 3-byte chunks, converting each chunk into 4 characters. When your input length isn\'t a multiple of 3 bytes, the last chunk is padded, and = signs mark that padding. One = means the last chunk had 2 bytes, == means it had 1 byte. This is normal and expected — not an error.',
+	},
+	{
+		q: 'What\'s the difference between hex and binary encoding?',
+		a: 'Both represent the same underlying bytes, just in different number bases. Hex (base 16) uses two characters per byte (00-FF), making it compact and common in color codes, hashes, and memory addresses. Binary (base 2) uses eight characters per byte (00000000-11111111), spelling out the actual bits — more useful for learning how character encoding works at the bit level than for everyday use.',
+	},
+	{
+		q: 'When should I URL-encode text?',
+		a: 'Whenever text is going into a URL query string, a form submission, or anywhere the URL specification reserves certain characters (spaces, &, ?, #, /, and others). Without encoding, those characters can break the URL structure or get interpreted as a separator instead of literal content. Encoding replaces them with a % followed by their hex byte value.',
+	},
+	{
+		q: 'Why did decoding fail with an error?',
+		a: 'Each format has strict rules: Base64 only uses A-Z, a-z, 0-9, +, /, and = padding — any other character means it isn\'t valid Base64. Hex needs an even number of hex digits (0-9, A-F). Binary needs groups of 0s and 1s. If you paste text that was encoded differently than you selected, or partially corrupted text, decoding will fail — that\'s expected behavior, not a bug in the tool.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((f) => ({
+		'@type': 'Question',
+		name: f.q,
+		acceptedAnswer: { '@type': 'Answer', text: f.a },
+	})),
+};
+---
+
+<Layout
+	title="Base64, Hex, Binary & URL Encoder/Decoder — Free Online Tool | Event Tools"
+	description="Free online converter for Base64, hex, binary, and URL encoding. Encode text into all four formats at once, or decode any of them back to plain text."
+>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<div class="max-w-3xl mx-auto px-4 py-10">
+		<h1 class="text-3xl font-bold mb-2 text-text">Base64, Hex, Binary &amp; URL Converter</h1>
+		<p class="text-text-muted mb-8">
+			Type or paste text below to see it encoded in all four formats at once. Or switch to
+			Decode to convert an encoded string back to plain text.
+		</p>
+
+		<div class="card p-5 sm:p-6 mb-6">
+			<h2 class="text-sm font-semibold mb-2 text-text">Encode</h2>
+			<label for="encode-input" class="sr-only">Text to encode</label>
+			<textarea
+				id="encode-input"
+				rows="3"
+				placeholder="Type or paste text here..."
+				class="field w-full px-3 py-2 text-sm mb-4"
+			>Hello, world!</textarea>
+
+			<div class="space-y-3">
+				<div>
+					<div class="flex items-center justify-between mb-1">
+						<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Base64</span>
+						<button type="button" data-copy-target="out-base64" class="copy-btn text-xs text-primary font-semibold">Copy</button>
+					</div>
+					<div id="out-base64" class="field px-3 py-2 text-sm break-all min-h-[2.5rem]"></div>
+				</div>
+				<div>
+					<div class="flex items-center justify-between mb-1">
+						<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">URL-encoded</span>
+						<button type="button" data-copy-target="out-url" class="copy-btn text-xs text-primary font-semibold">Copy</button>
+					</div>
+					<div id="out-url" class="field px-3 py-2 text-sm break-all min-h-[2.5rem]"></div>
+				</div>
+				<div>
+					<div class="flex items-center justify-between mb-1">
+						<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Hex</span>
+						<button type="button" data-copy-target="out-hex" class="copy-btn text-xs text-primary font-semibold">Copy</button>
+					</div>
+					<div id="out-hex" class="field px-3 py-2 text-sm break-all min-h-[2.5rem]"></div>
+				</div>
+				<div>
+					<div class="flex items-center justify-between mb-1">
+						<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Binary</span>
+						<button type="button" data-copy-target="out-binary" class="copy-btn text-xs text-primary font-semibold">Copy</button>
+					</div>
+					<div id="out-binary" class="field px-3 py-2 text-sm break-all min-h-[2.5rem]"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card p-5 sm:p-6 mb-10">
+			<h2 class="text-sm font-semibold mb-3 text-text">Decode</h2>
+			<div class="grid sm:grid-cols-[auto_1fr] gap-3 items-start mb-3">
+				<select id="decode-format" class="field px-3 py-2 text-sm">
+					<option value="base64">Base64</option>
+					<option value="url">URL-encoded</option>
+					<option value="hex">Hex</option>
+					<option value="binary">Binary</option>
+				</select>
+				<textarea
+					id="decode-input"
+					rows="2"
+					placeholder="Paste an encoded string here..."
+					class="field w-full px-3 py-2 text-sm"
+				></textarea>
+			</div>
+			<div class="flex items-center justify-between mb-1">
+				<span class="text-xs font-semibold text-text-muted uppercase tracking-wide">Decoded text</span>
+				<button type="button" data-copy-target="decode-output" class="copy-btn text-xs text-primary font-semibold">Copy</button>
+			</div>
+			<div id="decode-output" class="field px-3 py-2 text-sm break-all min-h-[2.5rem]"></div>
+			<p id="decode-error" class="text-xs text-primary mt-2"></p>
+		</div>
+
+		<article class="prose max-w-none prose-headings:text-text prose-p:text-text prose-a:text-primary prose-strong:text-text">
+			<p>
+				These four encodings all do the same basic thing — represent data as plain text — but
+				exist for different reasons and show up in different contexts. Here's what each one is
+				actually for.
+			</p>
+
+			<h2>Base64</h2>
+			<p>
+				Base64 turns any data (including binary data like images) into a string using only 64
+				safe, printable characters (A-Z, a-z, 0-9, +, /). It's the standard way to embed binary
+				data somewhere that only accepts text — email attachments (MIME), data URIs in CSS/HTML
+				(<code>data:image/png;base64,...</code>), and HTTP Basic Authentication headers all use it.
+				<strong>Base64 is not encryption</strong> — it's fully and instantly reversible by anyone,
+				with no key required. Never rely on it to hide sensitive data.
+			</p>
+
+			<h2>URL encoding (percent-encoding)</h2>
+			<p>
+				URLs can only safely contain a limited set of characters. URL encoding replaces anything
+				outside that set — spaces, <code>&amp;</code>, <code>?</code>, <code>#</code>, non-ASCII
+				characters — with a <code>%</code> followed by the character's hex byte value (a space
+				becomes <code>%20</code>). This is essential any time user input or dynamic text becomes
+				part of a URL query string or gets submitted through an HTML form.
+			</p>
+
+			<h2>Hex encoding</h2>
+			<p>
+				Hexadecimal represents each byte as two characters (00 through FF), which is why it shows
+				up constantly in contexts tied directly to raw bytes: color codes (<code>#FF5733</code>),
+				cryptographic hashes (MD5, SHA-256 output), MAC addresses, and low-level debugging where
+				you need to see exactly what bytes are in a piece of data.
+			</p>
+
+			<h2>Binary encoding</h2>
+			<p>
+				Binary spells out each byte as eight literal 1s and 0s — the actual bits. It's rarely used
+				in real systems (hex says the same thing far more compactly) but it's the clearest way to
+				actually see how character encoding works at the lowest level, which makes it useful for
+				learning or teaching, even if you'd never use it in production code.
+			</p>
+
+			<h2>Common mistakes</h2>
+			<ul>
+				<li><strong>Treating Base64 as security.</strong> It isn't — see above. If you need
+					confidentiality, use real encryption, not encoding.</li>
+				<li><strong>Forgetting to URL-encode dynamic values in a query string</strong>, which
+					silently breaks the URL the moment the value contains a space, <code>&amp;</code>, or
+					other reserved character.</li>
+				<li><strong>Assuming hex is case-sensitive.</strong> It isn't — <code>FF</code> and
+					<code>ff</code> represent the identical byte.</li>
+				<li><strong>Mixing up which format you're decoding.</strong> Pasting a hex string into a
+					Base64 decoder (or vice versa) will either error out or produce garbage — always match
+					the decode format to how the text was actually encoded.</li>
+			</ul>
+
+			<h2>Frequently asked questions</h2>
+			{faqs.map((f) => (
+				<div class="mb-4">
+					<h3 class="text-lg font-semibold">{f.q}</h3>
+					<p>{f.a}</p>
+				</div>
+			))}
+		</article>
+	</div>
+</Layout>
+
+<script>
+	const encodeInput = document.getElementById('encode-input') as HTMLTextAreaElement;
+	const outBase64 = document.getElementById('out-base64') as HTMLDivElement;
+	const outUrl = document.getElementById('out-url') as HTMLDivElement;
+	const outHex = document.getElementById('out-hex') as HTMLDivElement;
+	const outBinary = document.getElementById('out-binary') as HTMLDivElement;
+
+	const decodeFormat = document.getElementById('decode-format') as HTMLSelectElement;
+	const decodeInput = document.getElementById('decode-input') as HTMLTextAreaElement;
+	const decodeOutput = document.getElementById('decode-output') as HTMLDivElement;
+	const decodeError = document.getElementById('decode-error') as HTMLParagraphElement;
+
+	function toBase64(text: string): string {
+		const bytes = new TextEncoder().encode(text);
+		let binary = '';
+		bytes.forEach((b) => (binary += String.fromCharCode(b)));
+		return btoa(binary);
+	}
+	function fromBase64(str: string): string {
+		let binary: string;
+		try {
+			binary = atob(str);
+		} catch {
+			throw new Error('Not a valid Base64 string — check for characters outside A-Z, a-z, 0-9, +, /, and = padding.');
+		}
+		const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+		return new TextDecoder().decode(bytes);
+	}
+	function toHex(text: string): string {
+		const bytes = new TextEncoder().encode(text);
+		return Array.from(bytes)
+			.map((b) => b.toString(16).padStart(2, '0'))
+			.join(' ');
+	}
+	function fromHex(str: string): string {
+		const clean = str.replace(/\s+/g, '');
+		if (clean.length === 0) return '';
+		if (clean.length % 2 !== 0) throw new Error('Hex string must have an even number of characters.');
+		const bytes = new Uint8Array(clean.length / 2);
+		for (let i = 0; i < clean.length; i += 2) {
+			const byte = parseInt(clean.substr(i, 2), 16);
+			if (isNaN(byte)) throw new Error('Contains a character that isn\'t valid hex (0-9, A-F).');
+			bytes[i / 2] = byte;
+		}
+		return new TextDecoder().decode(bytes);
+	}
+	function toBinary(text: string): string {
+		const bytes = new TextEncoder().encode(text);
+		return Array.from(bytes)
+			.map((b) => b.toString(2).padStart(8, '0'))
+			.join(' ');
+	}
+	function fromBinary(str: string): string {
+		const parts = str.trim().split(/\s+/).filter(Boolean);
+		if (parts.length === 0) return '';
+		const bytes = new Uint8Array(parts.length);
+		parts.forEach((p, i) => {
+			if (!/^[01]{1,8}$/.test(p)) throw new Error('Contains a group that isn\'t valid 8-bit binary (0s and 1s only).');
+			bytes[i] = parseInt(p, 2);
+		});
+		return new TextDecoder().decode(bytes);
+	}
+	function toUrlEncoded(text: string): string {
+		return encodeURIComponent(text);
+	}
+	function fromUrlEncoded(str: string): string {
+		return decodeURIComponent(str);
+	}
+
+	function runEncode() {
+		const text = encodeInput.value;
+		try {
+			outBase64.textContent = text ? toBase64(text) : '';
+		} catch {
+			outBase64.textContent = '(unable to encode)';
+		}
+		outUrl.textContent = text ? toUrlEncoded(text) : '';
+		outHex.textContent = text ? toHex(text) : '';
+		outBinary.textContent = text ? toBinary(text) : '';
+	}
+
+	function runDecode() {
+		const str = decodeInput.value;
+		decodeError.textContent = '';
+		if (!str.trim()) {
+			decodeOutput.textContent = '';
+			return;
+		}
+		try {
+			let result = '';
+			switch (decodeFormat.value) {
+				case 'base64':
+					result = fromBase64(str.trim());
+					break;
+				case 'url':
+					result = fromUrlEncoded(str);
+					break;
+				case 'hex':
+					result = fromHex(str);
+					break;
+				case 'binary':
+					result = fromBinary(str);
+					break;
+			}
+			decodeOutput.textContent = result;
+		} catch (err) {
+			decodeOutput.textContent = '';
+			decodeError.textContent = err instanceof Error ? err.message : 'Could not decode this input.';
+		}
+	}
+
+	encodeInput.addEventListener('input', runEncode);
+	decodeInput.addEventListener('input', runDecode);
+	decodeFormat.addEventListener('change', runDecode);
+
+	document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+		btn.addEventListener('click', async () => {
+			const targetId = btn.dataset.copyTarget;
+			if (!targetId) return;
+			const el = document.getElementById(targetId);
+			const text = el?.textContent ?? '';
+			if (!text) return;
+			try {
+				await navigator.clipboard.writeText(text);
+				const original = btn.textContent;
+				btn.textContent = 'Copied!';
+				setTimeout(() => (btn.textContent = original), 1200);
+			} catch {
+				// clipboard API unavailable (e.g. insecure context) — fail silently, text is still selectable
+			}
+		});
+	});
+
+	runEncode();
+</script>

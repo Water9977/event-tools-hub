@@ -169,10 +169,16 @@ found and documented in this project's `TODO.md`), not just source code:
    guest list + tables + click-to-assign seating (drag-and-drop layered on
    top for desktop). No cross-link to your site on this one — it's not
    tied to your rental-pricing content the way the tent calculator is.
+4. **Base64/Hex/Binary/URL Toolkit** (`/base64-hex-binary-url-converter/`)
+   — a dev-utility, not event-planning-themed. No cross-link to your site
+   either; its role is diversifying the hub's traffic sources and topic
+   footprint, not feeding your funnel.
 
-Check `TODO.md`'s "Build order" section for the live status of tool #4
-and beyond by the time you're reading this — this doc won't stay updated
-in real time as the project progresses past this point.
+All four tools in the original locked research plan are now built and
+verified. Check `TODO.md`'s "Build order" section for whether a 5th tool
+has been added, or whether the project has moved to the deployment phase,
+by the time you're reading this — this doc won't stay updated in real
+time as the project progresses past this point.
 
 ## SEO approach
 
