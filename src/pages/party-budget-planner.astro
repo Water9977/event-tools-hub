@@ -36,7 +36,7 @@ const faqSchema = {
 ---
 
 <Layout
-	title="Party & Event Budget Planner — Free Calculator by Category | Event Tools"
+	title="Party & Event Budget Planner | Event Tools"
 	description="Free wedding & party budget planner. Get a category-by-category budget breakdown backed by real spending data, adjustable to your own vendor quotes."
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -115,15 +115,38 @@ const faqSchema = {
 				before you start getting quotes.
 			</p>
 
+			<h2>What's a realistic total budget to start with?</h2>
+			<p>
+				The percentages above only mean something once you have a real total to apply them to,
+				and that number varies enormously by region. According to The Knot's 2026 Real Weddings
+				Study, the average wedding runs about $46,600 in the Northeast and $48,400 in the
+				Mid-Atlantic, but closer to $29,000 in the Midwest and $30,800–$31,300 in the South,
+				Southwest, and West. City-level swings are even bigger — a wedding in New York City
+				averages around $88,000, while the same guest count in a smaller Midwestern city can come
+				in at a fraction of that. If you're not sure where to start, look up your own city or
+				state rather than anchoring on a single national average — it's the single biggest input
+				to whether this tool's dollar amounts feel realistic or wildly off for your situation.
+			</p>
+
 			<h2>Birthday, corporate, and casual event presets</h2>
 			<p>
-				Unlike the wedding split, the birthday, corporate, and casual-party presets in this tool
-				are general planning heuristics rather than a specific named study — there isn't a
-				comparably large public dataset for these event types the way there is for weddings. They're
-				built around the same basic logic (venue and catering dominate, followed by
-				decor/entertainment, with a buffer for the unexpected), scaled to how those event types
-				typically differ from weddings: less spent proportionally on attire and florals, more on
-				entertainment and catering relative to venue for a casual party.
+				Unlike the wedding split, the birthday and casual-party presets in this tool are general
+				planning heuristics rather than a specific named study — there isn't a comparably large
+				public dataset for these event types the way there is for weddings. They're built around
+				the same basic logic (venue and catering dominate, followed by decor/entertainment, with
+				a buffer for the unexpected), scaled to how those event types typically differ from
+				weddings: less spent proportionally on attire and florals, more on entertainment and
+				catering relative to venue for a casual party.
+			</p>
+			<p>
+				The corporate preset has a bit more real data behind it than the birthday and casual
+				ones: industry benchmarks for 2026 put food and beverage at roughly 32–50% of a corporate
+				event budget and venue rental at another 15–20%, meaning catering and venue combined
+				typically consume 40–60% of total spend — which is why this tool's corporate preset
+				weights Venue and Catering evenly at 30% each rather than splitting them the way a wedding
+				does. AV and entertainment costs also run higher proportionally for corporate events than
+				for weddings, since professional-grade audio, staging, and presentation equipment aren't
+				optional the way a wedding DJ upgrade is.
 			</p>
 
 			<h2>How to use the numbers this tool gives you</h2>
@@ -147,6 +170,26 @@ const faqSchema = {
 				weren't itemized in a vendor quote, a last-minute rental add-on, a price increase between
 				booking and event date — these are close to universal across real events, and a budget
 				with no buffer is the one most likely to run over its total.
+			</p>
+
+			<h2>A worked example: $20,000 wedding budget</h2>
+			<p>
+				Applying the wedding preset's percentages to a $20,000 total: venue and rentals land
+				around $5,800, catering and drinks around $4,800, photography and video around $2,000,
+				decor and flowers around $1,800, entertainment and attire around $1,200 each, planning
+				and coordination around $1,000, transportation around $400, and roughly $1,800 left as
+				buffer. None of those numbers are meant to be exact — they're a starting split you
+				replace, category by category, as real vendor quotes come in.
+			</p>
+
+			<h2>Once your budget is set</h2>
+			<p>
+				Two decisions naturally follow a locked-in budget: how much space you actually need, and
+				who sits where once guests arrive. If your Venue &amp; Rentals line includes an outdoor
+				tent, the <a href="/tent-size-calculator">Tent Size Calculator</a> turns your guest count
+				into a real square-footage number before you start getting rental quotes. Once the venue
+				and headcount are settled, the <a href="/seating-chart-planner">Seating Chart Planner</a>
+				handles the actual table assignments — capacity limits, family conflicts, and all.
 			</p>
 
 			<h2>Frequently asked questions</h2>

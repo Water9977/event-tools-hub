@@ -3,6 +3,14 @@
 ## Decisions made
 - [x] **Subdomain confirmed**: `tools.eventrentalcosts.com`. User explicitly confirmed (2026-08-05), no longer a default. `astro.config.mjs` `site` value already set to this from session 2, no code change needed.
 
+## SEO audit fixes (session 7, 2026-08-06) — all closed, verified live
+
+Ran `/marketing:seo-audit` (Firecrawl-based) against the live production site. Real findings, not assumed:
+- [x] **Content depth was never actually measured until this audit.** All 4 tools claimed "1200+ words" throughout this project's history but were genuinely 757-876 words when precisely counted from the rendered HTML (Firecrawl scrape). Fixed by researching real, cited supporting content per tool (not padding) — regional wedding cost data (The Knot 2026 Real Weddings Study), corporate event budget benchmarks, frame-vs-pole tent tradeoffs, permit guidance, real table-seating-capacity figures, wedding-seating-chart etiquette (The Knot), RFC 4648's base64url spec + JWT use case, and a verified UTF-8 multi-byte worked example ("café" = 4 chars but 5 bytes, confirmed via `TextEncoder`, not assumed). All 4 tools now 1204-1278 words, verified against the live production HTML with the exact same word-count methodology the audit used — not just claimed fixed.
+- [x] **Title tags were 71-74 chars** (over the ~60-char SERP truncation point) on all 5 pages. Trimmed to 42-53 chars, verified live.
+- [x] **No contextual cross-links existed between the 3 event tools** (only global nav). Added a natural triangle (Budget Planner ↔ Tent Size Calculator ↔ Seating Chart Planner), each link genuinely relevant to real event-planning sequencing, not forced. Correctly left the Base64 Toolkit unlinked to the other 3 — it's the deliberate dev-tool diversifier per the original architecture, forcing a link there would violate the "genuine, not forced" standard. Verified all 6 links present live via curl.
+- [x] Functional regression check on all 4 tools' actual calculator logic (not just content) before deploying — confirmed no breakage from the content edits, since only `<article>` prose was touched, `<script>` logic was untouched, but verified anyway rather than assumed.
+
 ## LIVE: https://tools.eventrentalcosts.com/ (deployed 2026-08-05, session 6)
 
 **Not a "Cloudflare Pages project"** — correcting earlier language in this file. `@astrojs/cloudflare` sets this project up as a **Workers + Static Assets** deployment (the modern Pages successor — has `main`/`assets` in `wrangler.jsonc`, not a `pages_build_output_dir`). Deploy command is `wrangler deploy`, not `wrangler pages deploy`. Functionally equivalent to what was planned, different underlying product — matters if referencing Cloudflare dashboard sections later (it's under **Workers & Pages → Overview**, not a separate "Pages" list).

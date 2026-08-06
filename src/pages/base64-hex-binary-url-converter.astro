@@ -36,7 +36,7 @@ const faqSchema = {
 ---
 
 <Layout
-	title="Base64, Hex, Binary & URL Encoder/Decoder — Free Online Tool | Event Tools"
+	title="Base64, Hex, Binary & URL Converter | Event Tools"
 	description="Free online converter for Base64, hex, binary, and URL encoding. Encode text into all four formats at once, or decode any of them back to plain text."
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
@@ -131,6 +131,32 @@ const faqSchema = {
 				with no key required. Never rely on it to hide sensitive data.
 			</p>
 
+			<h2>Base64 vs. Base64URL — a distinction that trips people up</h2>
+			<p>
+				Standard Base64's alphabet includes <code>+</code> and <code>/</code>, both of which have
+				special meaning inside a URL (and <code>=</code> padding needs percent-encoding there too).
+				RFC 4648 Section 5 defines a separate "base64url" variant specifically to fix this: it
+				swaps those two characters for <code>-</code> and <code>_</code>, which are safe in URLs
+				and filenames without any escaping. The most common place you'll actually run into
+				base64url is a JWT (JSON Web Token) — the header and payload segments of every JWT are
+				base64url-encoded, not standard Base64, which is why decoding a JWT with a plain Base64
+				tool sometimes fails on tokens containing a <code>-</code> or <code>_</code>. This tool
+				encodes to standard Base64; if you're working with a JWT specifically, swap
+				<code>-</code>→<code>+</code> and <code>_</code>→<code>/</code> before decoding here.
+			</p>
+
+			<h2>Why Base64 makes data bigger, not smaller</h2>
+			<p>
+				Base64 is often mistaken for a compression method — it's the opposite. Every 3 raw bytes
+				of input become 4 Base64 characters (each character stores 6 usable bits, and 4 × 6 = 24
+				bits = 3 bytes exactly), but since each output character still takes a full byte to store
+				as text, 3 bytes in becomes 4 bytes out — a 33% size increase. This is a real, unavoidable
+				cost of representing binary data as text, not an inefficiency in any particular tool, and
+				it's the reason APIs and file formats that care about size (like most binary protocols)
+				avoid Base64 for large payloads even though it's convenient for small ones like tokens and
+				short data URIs.
+			</p>
+
 			<h2>URL encoding (percent-encoding)</h2>
 			<p>
 				URLs can only safely contain a limited set of characters. URL encoding replaces anything
@@ -154,6 +180,21 @@ const faqSchema = {
 				in real systems (hex says the same thing far more compactly) but it's the clearest way to
 				actually see how character encoding works at the lowest level, which makes it useful for
 				learning or teaching, even if you'd never use it in production code.
+			</p>
+
+			<h2>Why "character count" and "byte count" aren't the same thing</h2>
+			<p>
+				Every encoding on this page works on bytes, not characters, and for plain ASCII text
+				(regular English letters, numbers, punctuation) those are the same thing — one character,
+				one byte. They stop matching the moment you use an accented letter, a symbol outside
+				ASCII, or an emoji. The word "café" is 4 characters, but UTF-8 (the encoding this tool
+				uses, matching virtually every modern web page) represents it as 5 bytes — the é alone
+				takes 2 bytes, not 1. A thumbs-up emoji is a single visible character but takes 4 bytes.
+				Try pasting either into the encoder above: the hex and binary outputs will show more byte
+				groups than you might expect from counting characters by eye, and that's correct behavior,
+				not a bug — it's exactly how UTF-8 represents non-ASCII text, and it's why a "character
+				limit" in some system (a tweet, a database column) doesn't always match a simple character
+				count once non-English text or emoji are involved.
 			</p>
 
 			<h2>Common mistakes</h2>

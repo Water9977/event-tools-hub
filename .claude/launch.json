@@ -10,8 +10,8 @@
     {
       "name": "event-tools-static-preview",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "dist/client", "-l", "4322"],
-      "port": 4322
+      "runtimeArgs": ["serve", "dist/client", "-l", "4325"],
+      "port": 4325
     }
   ]
 }
