@@ -48,6 +48,7 @@ For each tool above:
 - [ ] Google Analytics
 - [ ] Google Search Console + Bing Webmaster Tools submission on launch day
 - [x] Homepage — real tool-listing grid, reads from `src/lib/tools.ts` (single source of truth, also feeds `llms.txt`)
+- [x] Favicon — was still Astro's default scaffold placeholder this whole time, never actually customized. Replaced with the exact same mark as eventrentalcosts.com (32x32, terracotta `#b5502f` bg, white "E") per user's explicit request to match brand. Removed the unused, now-mismatched `favicon.ico` (was never linked in `Layout.astro` — modern browsers use the linked SVG, so it was dead weight, not a functional icon). Deployed, confirmed live: `favicon.svg` content matches exactly, `favicon.ico` correctly 404s.
 - [x] `og:image`/`twitter:image` — was completely missing from `Layout.astro` until the `seo-s` skill audit caught it. Generated via Playwright (`scripts/og-image.mjs`, same approach as eventrentalcosts.com's own script), 1200x630, no stats baked in (learned from the sibling project's own postmortem — a stats-bearing OG image silently goes stale).
 - [x] `llms.txt` — build-time generated (`src/pages/llms.txt.ts`), not a static file, for the same reason the sibling project switched: a static file drifts every time a tool gets added. Reads from the same `tools.ts` list as the homepage.
 
