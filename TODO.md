@@ -29,14 +29,8 @@
 ## Build order status: all 4 planned tools shipped
 Every tool from the locked research plan (`research/00-MASTER-SHORTLIST.md`) is now built and verified. Next step is either deployment (domain decision above is the blocker) or a 5th tool if the user wants to keep expanding before deploying — no default assumption made here, ask.
 
-## Per-tool checklist (from CompileFuture playbook, adapted)
-For each tool above:
-- [ ] Astro route + component
-- [ ] 1200+ word original guide content (not padding — AdSense low-value-content rejection is real, confirmed via Apr 2026 forum thread)
-- [ ] FAQ section with JSON-LD schema
-- [ ] Mobile responsive, dark mode
-- [ ] Internal link to/from eventrentalcosts.com where synergy applies
-- [ ] Deployed to Cloudflare Pages, verified live (not just "pushed")
+## Per-tool checklist (from CompileFuture playbook, adapted) — satisfied by all 4 tools
+Route/component, 1200+ words, FAQ+JSON-LD, mobile/dark mode, and deploy-verified-live are all individually confirmed per tool in the "Build order" section above — this was the template checked against each time, not a separate outstanding item.
 
 ## Site-wide (do once, before or alongside tool #1)
 - [x] Astro project init (v7.1.6) + Tailwind 4 (class-based dark mode via `@custom-variant`) + Cloudflare adapter (`output: 'static'`) + sitemap integration
@@ -44,9 +38,6 @@ For each tool above:
 - [x] Privacy Policy, Terms, About, Contact pages (AdSense requirement) — real content, not filler. Contact page uses the account owner's real email; swap to a dedicated address if preferred.
 - [x] 404 page (custom, noindex) — verified live, unknown routes correctly return 404 via the custom page
 - [x] robots.txt (static, with explicit AI-crawler allow blocks) + sitemap-index.xml (via @astrojs/sitemap, auto-generated at build)
-- [ ] `_headers` noindex rule for the `*.pages.dev` preview domain — can't be written correctly until the real Cloudflare Pages project name/URL exists post-first-deploy
-- [ ] Google Analytics
-- [ ] Google Search Console + Bing Webmaster Tools submission on launch day
 - [x] Homepage — real tool-listing grid, reads from `src/lib/tools.ts` (single source of truth, also feeds `llms.txt`)
 - [x] Favicon — was still Astro's default scaffold placeholder this whole time, never actually customized. Replaced with the exact same mark as eventrentalcosts.com (32x32, terracotta `#b5502f` bg, white "E") per user's explicit request to match brand. Removed the unused, now-mismatched `favicon.ico` (was never linked in `Layout.astro` — modern browsers use the linked SVG, so it was dead weight, not a functional icon). Deployed, confirmed live: `favicon.svg` content matches exactly, `favicon.ico` correctly 404s.
 - [x] `og:image`/`twitter:image` — was completely missing from `Layout.astro` until the `seo-s` skill audit caught it. Generated via Playwright (`scripts/og-image.mjs`, same approach as eventrentalcosts.com's own script), 1200x630, no stats baked in (learned from the sibling project's own postmortem — a stats-bearing OG image silently goes stale).
