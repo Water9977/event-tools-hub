@@ -48,6 +48,32 @@ const faqSchema = {
 			(or drag and drop on desktop). Your chart saves automatically in this browser.
 		</p>
 
+		<details class="card p-5 mb-6">
+			<summary class="text-sm font-semibold text-text cursor-pointer">
+				Not sure how many will actually attend? Estimate from your invite count
+			</summary>
+			<div class="grid sm:grid-cols-2 gap-4 mt-4">
+				<div>
+					<label for="invite-count" class="block text-sm font-medium mb-1 text-text">Invitations you plan to send</label>
+					<input id="invite-count" type="number" min="0" step="1" placeholder="e.g. 150" class="field w-full px-3 py-2 text-sm" />
+				</div>
+				<div>
+					<label for="event-travel-type" class="block text-sm font-medium mb-1 text-text">Most guests are</label>
+					<select id="event-travel-type" class="field w-full px-3 py-2 text-sm">
+						<option value="0.82">Local (no travel needed)</option>
+						<option value="0.60">Traveling (out of town)</option>
+						<option value="0.45">Destination event</option>
+					</select>
+				</div>
+			</div>
+			<p id="rsvp-estimate-output" class="text-sm text-text mt-3"></p>
+			<p class="text-xs text-text-muted mt-1">
+				Based on typical attendance rates for local, travel, and destination events
+				(<a href="https://rsvpify.com/wedding-rsvps-guest-count-numbers-infographic/" target="_blank" rel="noopener">source</a>).
+				Add roughly this many guests below, not your full invite count.
+			</p>
+		</details>
+
 		<div class="grid sm:grid-cols-2 gap-4 mb-6">
 			<div class="card p-5">
 				<h2 class="text-sm font-semibold mb-3 text-text">Add a guest</h2>
@@ -228,6 +254,23 @@ const faqSchema = {
 	const unassignedCountEl = document.getElementById('unassigned-count') as HTMLSpanElement;
 	const tablesGridEl = document.getElementById('tables-grid') as HTMLDivElement;
 	const exportBtn = document.getElementById('export-btn') as HTMLButtonElement;
+	const inviteCountEl = document.getElementById('invite-count') as HTMLInputElement;
+	const eventTravelTypeEl = document.getElementById('event-travel-type') as HTMLSelectElement;
+	const rsvpEstimateOutputEl = document.getElementById('rsvp-estimate-output') as HTMLParagraphElement;
+
+	function updateRsvpEstimate() {
+		const invites = Number(inviteCountEl.value) || 0;
+		if (invites <= 0) {
+			rsvpEstimateOutputEl.textContent = '';
+			return;
+		}
+		const rate = Number(eventTravelTypeEl.value);
+		const estimate = Math.round(invites * rate);
+		rsvpEstimateOutputEl.innerHTML = `Expect roughly <strong>${estimate}</strong> attending out of ${invites} invited (~${Math.round(rate * 100)}%).`;
+	}
+
+	inviteCountEl.addEventListener('input', updateRsvpEstimate);
+	eventTravelTypeEl.addEventListener('change', updateRsvpEstimate);
 
 	function uid(): string {
 		return Math.random().toString(36).slice(2, 9);
