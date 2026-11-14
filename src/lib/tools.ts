@@ -31,11 +31,4 @@ export const tools: Tool[] = [
 			'Build a seating chart by adding guests and tables, then assigning who sits where — with capacity limits, autosave, and a printable export.',
 		teaser: 'Drag, drop, done — no spreadsheet',
 	},
-	{
-		slug: 'base64-hex-binary-url-converter',
-		name: 'Base64, Hex, Binary & URL Encoder/Decoder',
-		description:
-			'Encode or decode text as Base64, hex, binary, or URL-encoded format — all four at once, with clear explanations of when to use each.',
-		teaser: 'One tool, four encodings',
-	},
 ];

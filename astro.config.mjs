@@ -11,6 +11,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://tools.eventrentalcosts.com',
   output: 'static',
+  trailingSlash: 'always',
 
   vite: {
     plugins: [tailwindcss()]
