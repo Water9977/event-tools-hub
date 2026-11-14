@@ -15,18 +15,6 @@ const faqs = [
 		a: 'For 100 guests seated (15 sq ft/person), you need roughly 1,500 sq ft — a 30x50 or 30x60 tent. For 100 guests cocktail-style (6 sq ft/person), you need roughly 600 sq ft — a 20x30 tent is often enough. Add space for a buffet, bar, or dance floor on top of that if your event includes them — use the calculator above with your actual guest count and extras for a precise number.',
 	},
 	{
-		q: 'What size tent do I need for 100 guests with a dance floor?',
-		a: 'For 100 guests with seated dining and a dance floor, plan for at least 1,725 to 1,925 square feet. This breaks down as 1,500 sq ft for seated dining (10 round tables of 10), approximately 125 sq ft for the dance floor (25 dancers at 5 sq ft each), plus 100–300 sq ft if you also include a buffet, bar, or DJ. Standard rental tent sizes for this setup are 30x60 ft (1,800 sq ft) or 40x50 ft (2,000 sq ft).',
-	},
-	{
-		q: 'What size tent do I need for 50 guests?',
-		a: 'For 50 guests seated at tables, you need 750 square feet — a 20x40 ft tent fits 50 guests comfortably. If you add a dance floor and buffet table, aim for 975–1,000 sq ft, which requires a 20x50 ft or 30x40 ft tent. For a 50-guest standing cocktail reception, a 20x20 ft tent (400 sq ft) is plenty.',
-	},
-	{
-		q: 'How many people can fit in a 30x50 tent?',
-		a: 'A 30x50 tent provides 1,500 square feet of covered space. It comfortably seats 100 guests for dinner at round banquet tables with room for service aisles. For a standing cocktail party, a 30x50 tent can accommodate up to 200–250 guests. If configured with a dance floor and buffet, it comfortably fits 70–80 seated dinner guests.',
-	},
-	{
 		q: 'Do I need extra space for a dance floor, buffet, or DJ booth?',
 		a: 'Yes — these are additional to your per-guest seating space, not included in it. A buffet table typically needs about 100 sq ft, a bar area about 100 sq ft, a DJ or band setup about 100 sq ft, and a dance floor needs roughly 4.5–5 sq ft per guest actually dancing at once (not your total guest count). The calculator above adds these on top of your base seating area when you check them.',
 	},
@@ -61,7 +49,7 @@ const faqSchema = {
 			includes them.
 		</p>
 
-		<div id="calculator" class="card p-5 sm:p-6 mb-10 scroll-mt-6">
+		<div class="card p-5 sm:p-6 mb-10">
 			<div class="grid sm:grid-cols-2 gap-4 mb-4">
 				<div>
 					<label for="guest-count" class="block text-sm font-medium mb-1 text-text">Guest count</label>
@@ -70,10 +58,10 @@ const faqSchema = {
 				<div>
 					<label for="seating-style" class="block text-sm font-medium mb-1 text-text">Seating style</label>
 					<select id="seating-style" class="field w-full px-3 py-2">
-						<option value="15">Seated dinner (tables &amp; chairs — 15 sq ft/guest)</option>
-						<option value="6">Cocktail / standing reception (6 sq ft/guest)</option>
-						<option value="8">Theater style (rows of chairs — 8 sq ft/guest)</option>
-						<option value="9">Conference / workshop (9 sq ft/guest)</option>
+						<option value="15">Seated dinner (tables &amp; chairs)</option>
+						<option value="6">Cocktail / standing reception</option>
+						<option value="8">Theater style (rows of chairs)</option>
+						<option value="9">Conference / workshop</option>
 					</select>
 				</div>
 			</div>
@@ -151,136 +139,14 @@ const faqSchema = {
 					but adjust upward if you know you're hosting an especially dance-heavy crowd.</li>
 			</ul>
 
-			<h2>Tent size by guest count: quick reference guide</h2>
-			<p>
-				Use this comparison table to quickly identify the minimum tent dimensions required for
-				standard headcounts across seated dining and standing cocktail formats:
-			</p>
-
-			<div class="overflow-x-auto rounded-lg border border-border my-6" role="region" tabindex="0" aria-label="Tent size recommendations by guest count">
-				<table class="w-full text-left text-sm">
-					<thead class="bg-surface border-b border-border text-xs uppercase tracking-wider text-text-muted">
-						<tr>
-							<th class="p-3">Guest Count</th>
-							<th class="p-3">Seated Dinner Only</th>
-							<th class="p-3">Seated + Dance &amp; Buffet</th>
-							<th class="p-3">Cocktail Reception</th>
-							<th class="p-3">Quick Preset</th>
-						</tr>
-					</thead>
-					<tbody class="divide-y divide-border">
-						<tr>
-							<td class="p-3 font-semibold text-text">25–30 guests</td>
-							<td class="p-3">10x30 or 20x20 ft (300–400 sq ft)</td>
-							<td class="p-3">20x30 ft (600 sq ft)</td>
-							<td class="p-3">10x20 ft (200 sq ft)</td>
-							<td class="p-3"><button type="button" class="preset-btn text-xs font-semibold text-primary underline" data-guests="30" data-style="15">Load 30 &uarr;</button></td>
-						</tr>
-						<tr>
-							<td class="p-3 font-semibold text-text">50 guests</td>
-							<td class="p-3">20x40 ft (800 sq ft)</td>
-							<td class="p-3">20x50 or 30x40 ft (1,000–1,200 sq ft)</td>
-							<td class="p-3">20x20 ft (400 sq ft)</td>
-							<td class="p-3"><button type="button" class="preset-btn text-xs font-semibold text-primary underline" data-guests="50" data-style="15" data-dance="true" data-buffet="true">Load 50 &uarr;</button></td>
-						</tr>
-						<tr>
-							<td class="p-3 font-semibold text-text">100 guests</td>
-							<td class="p-3">30x50 ft (1,500 sq ft)</td>
-							<td class="p-3">30x60 or 40x50 ft (1,800–2,000 sq ft)</td>
-							<td class="p-3">20x30 or 20x40 ft (600–800 sq ft)</td>
-							<td class="p-3"><button type="button" class="preset-btn text-xs font-semibold text-primary underline" data-guests="100" data-style="15" data-dance="true" data-buffet="true" data-bar="true" data-dj="true">Load 100 &uarr;</button></td>
-						</tr>
-						<tr>
-							<td class="p-3 font-semibold text-text">150 guests</td>
-							<td class="p-3">30x80 or 40x60 ft (2,400 sq ft)</td>
-							<td class="p-3">40x70 or 40x80 ft (2,800–3,200 sq ft)</td>
-							<td class="p-3">30x30 or 20x50 ft (900–1,000 sq ft)</td>
-							<td class="p-3"><button type="button" class="preset-btn text-xs font-semibold text-primary underline" data-guests="150" data-style="15" data-dance="true" data-buffet="true" data-bar="true">Load 150 &uarr;</button></td>
-						</tr>
-						<tr>
-							<td class="p-3 font-semibold text-text">200 guests</td>
-							<td class="p-3">40x80 ft (3,200 sq ft)</td>
-							<td class="p-3">40x100 ft (4,000 sq ft)</td>
-							<td class="p-3">30x40 or 20x60 ft (1,200 sq ft)</td>
-							<td class="p-3"><button type="button" class="preset-btn text-xs font-semibold text-primary underline" data-guests="200" data-style="15" data-dance="true" data-buffet="true">Load 200 &uarr;</button></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<div id="tent-size-50-guests" class="scroll-mt-16 my-8">
-				<h2>What size tent do I need for 50 guests?</h2>
-				<p>
-					For 50 guests seated at round banquet tables (typically 5 tables of 10), you need a base of
-					<strong>750 square feet</strong> (50 guests &times; 15 sq ft). The closest standard tent
-					is a <strong>20x40 ft tent</strong> (800 sq ft). If your 50-guest event includes a dance floor
-					and a food buffet, add approximately 225 sq ft of buffer (125 sq ft for the dance floor and 100 sq ft
-					for the buffet table). That brings the total footprint to <strong>975 square feet</strong>, which
-					calls for a <strong>20x50 ft</strong> (1,000 sq ft) or <strong>30x40 ft</strong> (1,200 sq ft) tent.
-				</p>
-				<p>
-					If you are hosting a 50-guest cocktail party without formal dinner seating, guests only require 6 sq ft
-					each (300 sq ft total). A compact <strong>20x20 ft tent</strong> (400 sq ft) covers the reception with
-					room for standing high-top tables.
-				</p>
-			</div>
-
-			<div id="tent-size-100-guests" class="scroll-mt-16 my-8">
-				<h2>What size tent do I need for 100 guests?</h2>
-				<p>
-					For 100 guests seated for a formal dinner, you need <strong>1,500 square feet</strong> (100 guests
-					&times; 15 sq ft). The exact standard commercial size is a <strong>30x50 ft tent</strong> (1,500 sq ft).
-				</p>
-				<p>
-					<strong>What about 100 guests with a dance floor, buffet, bar, and DJ?</strong> A full wedding or anniversary setup
-					adds substantial square footage:
-				</p>
-				<ul>
-					<li>Base seating for 100 guests: 1,500 sq ft</li>
-					<li>Dance floor (25 dancers at once &times; 5 sq ft): 125 sq ft</li>
-					<li>Buffet food line: 100 sq ft</li>
-					<li>Bar service area: 100 sq ft</li>
-					<li>DJ booth / audio setup: 100 sq ft</li>
-					<li><strong>Total required: 1,925 square feet</strong></li>
-				</ul>
-				<p>
-					For this full reception package, a <strong>30x60 ft tent</strong> (1,800 sq ft) is the absolute minimum,
-					while a <strong>40x50 ft or 40x60 ft tent</strong> (2,000–2,400 sq ft) provides comfortable walking aisles
-					for guests and catering staff.
-				</p>
-			</div>
-
-			<div id="tent-size-150-guests" class="scroll-mt-16 my-8">
-				<h2>What size tent do I need for 150 guests?</h2>
-				<p>
-					A 150-guest seated dinner requires a minimum base of <strong>2,250 square feet</strong> (150 &times; 15 sq ft).
-					The recommended standard size is a <strong>40x60 ft tent</strong> (2,400 sq ft). When adding full reception
-					amenities (dance floor, DJ, multiple bars, and buffet lines), total space requirements reach
-					<strong>2,800 to 3,100 square feet</strong>, which requires a <strong>40x70 ft or 40x80 ft tent</strong>.
-				</p>
-			</div>
-
-			<div id="tent-size-200-guests" class="scroll-mt-16 my-8">
-				<h2>What size tent do I need for 200 guests?</h2>
-				<p>
-					For large events of 200 guests seated, base table space demands <strong>3,000 square feet</strong>. A
-					<strong>40x80 ft tent</strong> (3,200 sq ft) accommodates 200 seated guests comfortably. For a full wedding reception
-					with a large dance floor, staging, buffet stations, and bars, total square footage expands to
-					<strong>3,700–4,000 sq ft</strong>, making a <strong>40x100 ft commercial tent</strong> the gold standard.
-				</p>
-			</div>
-
 			<h2>Common tent sizes and who they fit</h2>
 			<ul>
 				<li><strong>10x20 ft (200 sq ft):</strong> ~13 seated guests, ~33 standing</li>
 				<li><strong>20x20 ft (400 sq ft):</strong> ~26 seated guests, ~50 cocktail-style</li>
 				<li><strong>20x40 ft (800 sq ft):</strong> ~53 seated guests, up to ~100 with a mixed setup</li>
 				<li><strong>30x40 ft (1,200 sq ft):</strong> ~80 seated dining guests comfortably</li>
-				<li><strong>30x50 ft (1,500 sq ft):</strong> ~100 seated dining guests (standard wedding size)</li>
 				<li><strong>30x60 ft (1,800 sq ft):</strong> ~120 seated dining guests</li>
-				<li><strong>40x60 ft (2,400 sq ft):</strong> ~160 seated guests, or 120 with dance floor</li>
 				<li><strong>40x80 ft (3,200 sq ft):</strong> ~210 seated dining guests</li>
-				<li><strong>40x100 ft (4,000 sq ft):</strong> ~260 seated guests, up to 200 with full wedding reception amenities</li>
 			</ul>
 			<p>
 				Rental companies size tents in fixed increments, so your calculated square footage will
@@ -318,7 +184,7 @@ const faqSchema = {
 
 			<h2>A worked example: 150-guest cocktail reception with a dance floor</h2>
 			<p>
-				Cocktail-style seating for 150 guests needs 900 sq ft on its own (6 sq ft &times; 150). Add a
+				Cocktail-style seating for 150 guests needs 900 sq ft on its own (6 sq ft × 150). Add a
 				bar area (100 sq ft) and a dance floor sized for about a quarter of the guests dancing at
 				once — roughly 190 sq ft — and the real total comes to 1,190 sq ft. That lands just under
 				the 1,200 sq ft mark, which a 20x60 ft tent covers exactly; a 30x50 ft (1,500 sq ft) is the
@@ -425,19 +291,6 @@ const faqSchema = {
 	}
 
 	function load() {
-		// First check URL query params (e.g. ?guests=100&style=15&dance=1)
-		const params = new URLSearchParams(window.location.search);
-		if (params.has('guests')) {
-			guestCountEl.value = params.get('guests') || '100';
-			if (params.has('style')) seatingStyleEl.value = params.get('style') || '15';
-			extraBuffetEl.checked = params.get('buffet') === '1' || params.get('buffet') === 'true';
-			extraBarEl.checked = params.get('bar') === '1' || params.get('bar') === 'true';
-			extraDjEl.checked = params.get('dj') === '1' || params.get('dj') === 'true';
-			extraDanceEl.checked = params.get('dance') === '1' || params.get('dance') === 'true';
-			return;
-		}
-
-		// Fallback to localStorage
 		const raw = localStorage.getItem(STORAGE_KEY);
 		if (!raw) return;
 		try {
@@ -449,31 +302,9 @@ const faqSchema = {
 			extraDjEl.checked = !!data.dj;
 			extraDanceEl.checked = !!data.dance;
 		} catch {
-			// ignore malformed saved state
+			// ignore malformed saved state, defaults already set in markup
 		}
 	}
-
-	// Preset quick-fill buttons
-	document.querySelectorAll<HTMLButtonElement>('.preset-btn').forEach((btn) => {
-		btn.addEventListener('click', () => {
-			const guests = btn.dataset.guests;
-			const style = btn.dataset.style;
-			const dance = btn.dataset.dance === 'true';
-			const buffet = btn.dataset.buffet === 'true';
-			const bar = btn.dataset.bar === 'true';
-			const dj = btn.dataset.dj === 'true';
-
-			if (guests) guestCountEl.value = guests;
-			if (style) seatingStyleEl.value = style;
-			extraDanceEl.checked = dance;
-			extraBuffetEl.checked = buffet;
-			extraBarEl.checked = bar;
-			extraDjEl.checked = dj;
-
-			calculate();
-			document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' });
-		});
-	});
 
 	[guestCountEl, seatingStyleEl, extraBuffetEl, extraBarEl, extraDjEl, extraDanceEl].forEach((el) => {
 		el.addEventListener('input', calculate);
